@@ -1,0 +1,32 @@
+---
+description: Контекст — борьба с context rot (GSD)
+alwaysApply: true
+---
+
+# Контекст: узко и по делу
+
+## Принципы
+
+- **Один фокус** — текущая волна
+- **Файлы > память** — `.planning/state.md`, `brief.md`
+- После волны — кратко в `state.md`, не весь diff в чат
+
+## Что читать
+
+| Ситуация | Источник |
+|----------|----------|
+| Новая сессия | `.planning/PROJECT.md`, `state.md` |
+| Задача | `brief.md`, `plan.md` |
+| Стек | `nuxt-template.mdc`, `90-project-context.mdc`, README |
+| Код | только релевантные файлы |
+
+## Типичные зоны шаблона
+
+- `app/pages/`, `app/layouts/`, `app/components/`
+- `app/composables/useApi.ts`
+- `server/utils/serverApi.ts`, `server/api/`
+- `app/assets/styles/`, `shared/`
+
+## Длинные задачи (XL)
+
+- Фазы в `plan.md`; начало/конец сессии — обновить `state.md`

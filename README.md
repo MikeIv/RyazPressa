@@ -11,7 +11,8 @@
 3. **`README.md`**: заголовок и описание под ваш продукт.
 4. **`app/pages/index.vue`**: заголовок и текст приветствия.
 5. **`cp .env.example .env`**: задайте **`NUXT_PUBLIC_API_BASE`**, если фронт ходит на отдельный API (иначе оставьте пустым — относительные пути к текущему origin).
-6. **`pnpm install`** → **`pnpm run build`** и **`pnpm run lint:all`** — убедитесь, что всё зелёное.
+6. **Cursor Agent:** обновите [`.cursor/rules/90-project-context.mdc`](.cursor/rules/90-project-context.mdc) и [`.planning/PROJECT.md`](.planning/PROJECT.md) под продукт (workflow-правила `00`–`06` и `nuxt-template.mdc` уже в шаблоне).
+7. **`pnpm install`** → **`pnpm run build`** и **`pnpm run lint:all`** — убедитесь, что всё зелёное.
 
 ## Требования
 
@@ -90,7 +91,19 @@ pnpm approve-builds --all
 - Сервер: **`serverApi(event?)`** — [`server/utils/serverApi.ts`](server/utils/serverApi.ts); URL — [`shared/utils/normalizeApiBaseUrl.ts`](shared/utils/normalizeApiBaseUrl.ts) (`normalizeApiBaseUrl`, `joinApiUrl`).
 - Типизация `public.apiBase` — [`types/nuxt-public.d.ts`](types/nuxt-public.d.ts). Приватные ключи `runtimeConfig` добавляйте в `nuxt.config` и отдельное расширение `RuntimeConfig` в `types/`.
 
-Правила Cursor: **[`.cursor/rules/nuxt-template.mdc`](.cursor/rules/nuxt-template.mdc)**.
+### Правила Cursor (Agent)
+
+Уже включены в шаблон — при развёртывании **дополнительно копировать не нужно**.
+
+| Назначение | Путь |
+|------------|------|
+| Workflow (GSD + Superpowers) | [`.cursor/rules/00-workflow-core.mdc`](.cursor/rules/00-workflow-core.mdc) … `06-fundamental-principles.mdc` |
+| Контекст проекта | [`.cursor/rules/90-project-context.mdc`](.cursor/rules/90-project-context.mdc) |
+| Nuxt / Vue / SCSS / API | [`.cursor/rules/nuxt-template.mdc`](.cursor/rules/nuxt-template.mdc) |
+| Планирование | [`.planning/PROJECT.md`](.planning/PROJECT.md) |
+| Справка | [`AGENTS.md`](AGENTS.md) |
+
+Внешний репозиторий правил (обновления, другие проекты): `d:\_WEB\_Work\_Cursor-rules-template\`
 
 ## Документация
 

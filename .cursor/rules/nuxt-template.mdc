@@ -71,5 +71,7 @@ alwaysApply: true
 
 ## Поведение агента
 
+- **Процесс (Discuss → Plan → Execute → Verify):** `00-workflow-core` … `06-fundamental-principles`, контекст — `90-project-context.mdc`, `.planning/PROJECT.md`, [`AGENTS.md`](../../AGENTS.md).
 - Перед крупными изменениями сверяться со структурой репозитория; не раздувать дифф без запроса.
-- При риске нехватки контекста — предупредить и предложить разбить задачу.
+- При риске нехватки контекста — волны (`02-planning-gsd`), обновить `.planning/state.md`.
+- **Запрос «сделай коммит»:** `git status` / `git diff`, убрать лишнее, `pnpm lint:all` при необходимости, коммит только scope задачи.
