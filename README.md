@@ -105,6 +105,23 @@ pnpm approve-builds --all
 
 Внешний репозиторий правил (обновления, другие проекты): `d:\_WEB\_Work\_Cursor-rules-template\`
 
+### MCP (локально, опционально)
+
+Создайте `.cursor/mcp.json` (каталог `.cursor/` в `.gitignore`, кроме `rules/`):
+
+```json
+{
+  "$schema": "https://json.schemastore.org/mcp.json",
+  "mcpServers": {
+    "nuxt": { "url": "https://mcp.nuxt.com/mcp" },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@context7/mcp-server"]
+    }
+  }
+}
+```
+
 ## Документация
 
 - Документация продукта — в **`docs/`** (по мере появления).

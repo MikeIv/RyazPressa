@@ -50,28 +50,11 @@ alwaysApply: true
 
 - Пошагово, без переноса React-стека в Vue. Состояние — composables / `useState`. Серверная логика — `server/api`. Для данных страницы в SFC не использовать сырой `fetch`.
 
-## MCP (локально)
+## MCP
 
-Скопируйте в **`.cursor/mcp.json`** (каталог `.cursor/` в `.gitignore` для секретов и локальных настроек) или объедините с уже настроенными серверами:
-
-```json
-{
-  "$schema": "https://json.schemastore.org/mcp.json",
-  "mcpServers": {
-    "nuxt": {
-      "url": "https://mcp.nuxt.com/mcp"
-    },
-    "context7": {
-      "command": "npx",
-      "args": ["-y", "@context7/mcp-server"]
-    }
-  }
-}
-```
+Конфиг `.cursor/mcp.json` — см. [README](../../README.md#mcp-локально-опционально). Каталог `.cursor/` (кроме `rules/`) — в `.gitignore`.
 
 ## Поведение агента
 
-- **Процесс (Discuss → Plan → Execute → Verify):** `00-workflow-core` … `06-fundamental-principles`, контекст — `90-project-context.mdc`, `.planning/PROJECT.md`, [`AGENTS.md`](../../AGENTS.md).
-- Перед крупными изменениями сверяться со структурой репозитория; не раздувать дифф без запроса.
-- При риске нехватки контекста — волны (`02-planning-gsd`), обновить `.planning/state.md`.
-- **Запрос «сделай коммит»:** `git status` / `git diff`, убрать лишнее, `pnpm lint:all` при необходимости, коммит только scope задачи.
+- Процесс и фазы — `00-workflow-core` … `06-fundamental-principles`; этот файл — только про стек.
+- Перед крупными изменениями сверяться со структурой `app/` и существующими паттернами (`useApi`, `serverApi`, `--fs-*`).
