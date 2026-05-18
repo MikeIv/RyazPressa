@@ -31,6 +31,17 @@ export default defineNuxtConfig({
     typeCheck: 'build',
   },
 
+  app: {
+    head: {
+      htmlAttrs: { lang: 'ru' },
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      ],
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    },
+  },
+
   /** Публичные ключи доступны на клиенте; секреты — только в корне `runtimeConfig` без `public` */
   runtimeConfig: {
     public: {
