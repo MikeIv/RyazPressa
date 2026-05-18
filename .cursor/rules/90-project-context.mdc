@@ -11,7 +11,7 @@ alwaysApply: true
 - **Назначение:** мультиарендная новостная платформа — один Nuxt-app обслуживает 26 сайтов, сайт определяется по домену в runtime
 - **Основной сайт:** https://ryazpressa.ru/ | **Второй сайт:** https://nesecretno.ru/
 - **GitLab:** https://gitlab.com/llcsavin/ryazpressa-front.git
-- **SSR:** включён (по умолчанию Nuxt)
+- **SSR:** отключён (`ssr: false`)
 
 ## Стек
 

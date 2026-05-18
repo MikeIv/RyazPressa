@@ -4,6 +4,8 @@ const isDev = process.env.NODE_ENV === 'development'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
 
+  ssr: false,
+
   /** Исходники приложения в `app/`. Каталог `server/` — в корне репозитория. */
   srcDir: 'app/',
 

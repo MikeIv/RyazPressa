@@ -13,8 +13,8 @@
 3. **`README.md`**: заголовок и описание под ваш продукт.
 4. **`app/pages/index.vue`**: заголовок и текст приветствия.
 5. **`cp .env.example .env`**: задайте **`NUXT_PUBLIC_API_BASE`**, если фронт ходит на отдельный API (иначе оставьте пустым — относительные пути к текущему origin).
-6. **Cursor Agent:** обновите [`.cursor/rules/90-project-context.mdc`](.cursor/rules/90-project-context.mdc) и [`.planning/PROJECT.md`](.planning/PROJECT.md) под продукт (workflow-правила `00`–`06` и `nuxt-template.mdc` уже в шаблоне).
-7. **`pnpm install`** → **`pnpm run build`** и **`pnpm run lint:all`** — убедитесь, что всё зелёное.
+6. **`pnpm install`** → **`pnpm run build`** и **`pnpm run lint:all`** —
+   убедитесь, что всё зелёное.
 
 ## Требования
 
