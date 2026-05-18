@@ -3,15 +3,15 @@ description: Контекст Nuxt 4 Template — стек и структура
 alwaysApply: true
 ---
 
-# Nuxt 4 Template — контекст проекта
-
-> Это **репозиторий-шаблон** Grand. После копирования в новый продукт обновите имя, назначение и пути в этом файле и в `.planning/PROJECT.md`.
+# Ryazpressa Platform — контекст проекта
 
 ## Продукт
 
-- **Пакет (шаблон):** `FoodSity-nuxt` в `package.json` — переименовать в новом проекте
-- **Назначение:** универсальный каркас Nuxt 4.4 (Vue 3, TS, Nitro, HTTP API, SCSS tokens)
-- **SSR:** по умолчанию Nuxt (в шаблоне не отключён; при необходимости `ssr: false` в `nuxt.config.ts`)
+- **Пакет:** `ryazpressa-platform`
+- **Назначение:** мультиарендная новостная платформа — один Nuxt-app обслуживает 26 сайтов, сайт определяется по домену в runtime
+- **Основной сайт:** https://ryazpressa.ru/ | **Второй сайт:** https://nesecretno.ru/
+- **GitLab:** https://gitlab.com/llcsavin/ryazpressa-front.git
+- **SSR:** включён (по умолчанию Nuxt)
 
 ## Стек
 
@@ -24,14 +24,20 @@ alwaysApply: true
 | Пакеты | pnpm 11.x |
 | API | `NUXT_PUBLIC_API_BASE` → `useApi` / `useApiFetch` / `serverApi` |
 
-## Структура
+## Архитектура
+
+Runtime multi-tenant: один деплой, сайт по домену → `event.context.site` (Nitro middleware) → `useSiteConfig()` (composable).
 
 ```
-app/                 # srcDir: pages, layouts, components, composables, assets
-server/              # api/, routes/, utils/serverApi.ts
-shared/types, shared/utils
-types/               # nuxt-public.d.ts
-scripts/             # pre-commit.mjs
+app/                   # srcDir: pages, layouts, components, composables, assets
+server/                # api/, routes/, utils/serverApi.ts, middleware/site.ts
+shared/
+  types/               # SiteConfig, API-типы
+  utils/               # helpers
+  sites/               # per-site конфиги (ryazpressa.ts, nesecretno.ts, ...)
+types/                 # nuxt-public.d.ts
+scripts/               # pre-commit.mjs
+.planning/             # PROJECT.md, plan.md, state.md
 ```
 
 ## Команды
@@ -51,17 +57,11 @@ pnpm lint:fix
 - `.cursor/` в git — только `rules/`
 - Коммиты — только по явной просьбе; pre-commit: Husky + lint-staged
 
-## После развёртывания из шаблона
-
-1. `package.json` → `name`
-2. README, `app/pages/index.vue`
-3. Этот файл + `.planning/PROJECT.md`
-4. `.env` из `.env.example`
-
 ## Планирование
 
-- `.planning/PROJECT.md`
-- Задача: `cp .planning/brief-template.md .planning/brief.md`
+- `.planning/PROJECT.md` — постоянный контекст
+- `.planning/plan.md` — план волн
+- `.planning/state.md` — прогресс
 
 ## Не трогать без согласования
 

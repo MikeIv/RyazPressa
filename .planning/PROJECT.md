@@ -1,31 +1,75 @@
-# Nuxt 4 Template — PROJECT
+# Ryazpressa Platform — PROJECT
 
-Постоянный контекст для Cursor Agent. **Обновите после копирования шаблона в продуктовый репозиторий.**
+Постоянный контекст проекта для Cursor Agent.
 
 ## Назначение
 
-Универсальный стартовый каркас Grand: Nuxt 4.4, Vue 3, TypeScript, Nitro, ESLint + Prettier + Stylelint, Husky, SCSS-токены (`--fs-*`), HTTP API (`useApi`, `useApiFetch`, `serverApi`).
+Мультиарендная новостная платформа на Nuxt 4.4.
+Единое приложение обслуживает 26 новостных сайтов — сайт определяется по домену в runtime,
+каждый получает свой API и CSS-тему.
+
+## Репозиторий
+
+- GitLab: https://gitlab.com/llcsavin/ryazpressa-front.git
+- Основной сайт: https://ryazpressa.ru/
+- Второй сайт: https://nesecretno.ru/
 
 ## Стек
 
-| Слой | Технология |
-|------|------------|
-| Frontend | Nuxt 4.4, Vue 3 |
-| Lint | ESLint (@nuxt/eslint), Prettier, Stylelint |
-| Стили | SCSS, CSS Modules в SFC |
-| API | `runtimeConfig.public.apiBase` |
-| PM | pnpm 11.x |
+| Слой     | Технология                                                 |
+| -------- | ---------------------------------------------------------- |
+| Frontend | Nuxt 4.4, Vue 3.5                                          |
+| Модули   | `@nuxt/eslint`                                             |
+| Стили    | SCSS, CSS Modules в SFC (`$style`) + CSS-переменные темы   |
+| Язык     | TypeScript strict, `typeCheck: 'build'`                    |
+| Пакеты   | pnpm 11.x                                                  |
+| API      | Per-site `apiBase` через `useSiteConfig()` → `useApiFetch` |
 
-## Ключевые пути
+## Архитектура
 
-| Путь | Назначение |
-|------|------------|
-| `app/pages/` | Маршруты |
-| `app/layouts/default.vue` | Layout |
-| `app/composables/useApi.ts` | HTTP клиент |
-| `server/utils/serverApi.ts` | API с Nitro |
-| `shared/utils/normalizeApiBaseUrl.ts` | URL API |
-| `app/assets/styles/` | Глобальные стили и токены |
+**Runtime multi-tenant**: один деплой, сайт определяется по домену.
+
+```
+shared/sites/          # конфиги всех сайтов (slug, domain, apiBase, theme, sections)
+server/middleware/     # определение сайта по домену, event.context.site
+app/plugins/           # CSS-переменные темы в <html> через useHead
+app/composables/useSiteConfig.ts  # доступ к конфигу текущего сайта
+```
+
+## Структура
+
+```
+app/                   # srcDir: pages, layouts, components, composables, assets
+server/                # api/, routes/, utils/serverApi.ts, middleware/
+shared/
+  types/               # типы сущностей + API-контракт
+  utils/               # normalizeApiBaseUrl + helpers
+  sites/               # per-site конфиги
+types/                 # nuxt-public.d.ts
+scripts/               # pre-commit.mjs
+.planning/             # артефакты планирования
+```
+
+## Разделы сайтов
+
+**Базовый сайт (ryazpressa.ru):**
+
+- `/` — главная, лента новостей
+- `/news/[slug]` — страница статьи
+- `/okruga` + `/okruga/[slug]` — округа (уникально для ryazpressa)
+- `/ryadom-s-nami` — рядом с нами (уникально)
+- `/projects` + `/projects/[slug]` — проекты (уникально)
+- `/documents` — документы
+- `/contacts` — контакты
+
+**Остальные 25 сайтов (пример — nesecretno.ru, denzadnem.su):**
+
+- `/` — главная
+- `/gallery` — фотогалерея
+- `/documents` — документы
+- `/contacts` — контакты
+
+Разделы управляются конфигом сайта (`sections: { gallery: true, okruga: false, ...}`).
 
 ## Команды
 
@@ -34,24 +78,11 @@ pnpm install
 pnpm dev
 pnpm build
 pnpm lint:all
+pnpm lint:fix
 ```
 
-## Новый проект из шаблона
+## Не трогать без согласования
 
-1. Скопировать репозиторий / fork
-2. Переименовать `package.json`, README, главную страницу
-3. Обновить `90-project-context.mdc` и этот файл
-4. `cp .env.example .env`
-
-## Cursor rules
-
-- Workflow: `.cursor/rules/00` … `06`
-- Nuxt: `nuxt-template.mdc`
-- Контекст: `90-project-context.mdc`
-- Справка: `AGENTS.md`
-
-## Ограничения для агента
-
-- API только через обёртки шаблона
-- Не коммитить `.env`
-- Минимальный diff, без лишнего рефакторинга
+- `srcDir`, ESLint/Husky pipeline
+- Токены `--fs-*` — массовые изменения без задачи
+- `.env` в git

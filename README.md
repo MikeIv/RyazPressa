@@ -1,8 +1,10 @@
-# Nuxt 4 — стартовый шаблон
+# Ryazpressa Platform
 
-Универсальный каркас на **Nuxt 4.4.x** (Vue 3, TypeScript, Nitro): `srcDir: app/`, ESLint + Prettier + Stylelint, Husky, глобальные SCSS-токены, **HTTP API** (`useApi` / `useApiFetch` / `serverApi`). Пакетный менеджер — **pnpm** (см. `packageManager` в `package.json`).
+Мультиарендная новостная платформа на **Nuxt 4.4.x** (Vue 3, TypeScript, Nitro).
+Один деплой обслуживает 26 новостных сайтов — сайт определяется по домену в runtime.
 
-В репозитории `Grand` этот же каркас используется для **FoodSity**; при копировании в новый проект достаточно переименовать пакет и брендинг (см. ниже).
+- Основной сайт: https://ryazpressa.ru/
+- GitLab: https://gitlab.com/llcsavin/ryazpressa-front.git
 
 ## Новый проект на базе шаблона
 
@@ -95,13 +97,13 @@ pnpm approve-builds --all
 
 Уже включены в шаблон — при развёртывании **дополнительно копировать не нужно**.
 
-| Назначение | Путь |
-|------------|------|
+| Назначение                   | Путь                                                                                                         |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | Workflow (GSD + Superpowers) | [`.cursor/rules/00-workflow-core.mdc`](.cursor/rules/00-workflow-core.mdc) … `06-fundamental-principles.mdc` |
-| Контекст проекта | [`.cursor/rules/90-project-context.mdc`](.cursor/rules/90-project-context.mdc) |
-| Nuxt / Vue / SCSS / API | [`.cursor/rules/nuxt-template.mdc`](.cursor/rules/nuxt-template.mdc) |
-| Планирование | [`.planning/PROJECT.md`](.planning/PROJECT.md) |
-| Справка | [`AGENTS.md`](AGENTS.md) |
+| Контекст проекта             | [`.cursor/rules/90-project-context.mdc`](.cursor/rules/90-project-context.mdc)                               |
+| Nuxt / Vue / SCSS / API      | [`.cursor/rules/nuxt-template.mdc`](.cursor/rules/nuxt-template.mdc)                                         |
+| Планирование                 | [`.planning/PROJECT.md`](.planning/PROJECT.md)                                                               |
+| Справка                      | [`AGENTS.md`](AGENTS.md)                                                                                     |
 
 Внешний репозиторий правил (обновления, другие проекты): `d:\_WEB\_Work\_Cursor-rules-template\`
 

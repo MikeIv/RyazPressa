@@ -4,17 +4,17 @@
 
 ## Правила (`.cursor/rules/`)
 
-| Файл | Назначение |
-|------|------------|
-| `00-workflow-core` | S/M/L/XL, фазы GSD + Superpowers |
-| `01-discuss-before-code` | Уточнение до кода |
-| `02-planning-gsd` | `.planning/`, волны |
-| `03-execution-discipline` | Минимальный diff, `useApi` |
-| `04-verify-and-done` | Lint, «готово» |
-| `05-context-hygiene` | Узкий контекст |
+| Файл                        | Назначение                                                          |
+| --------------------------- | ------------------------------------------------------------------- |
+| `00-workflow-core`          | S/M/L/XL, фазы GSD + Superpowers                                    |
+| `01-discuss-before-code`    | Уточнение до кода                                                   |
+| `02-planning-gsd`           | `.planning/`, волны                                                 |
+| `03-execution-discipline`   | Минимальный diff, `useApi`                                          |
+| `04-verify-and-done`        | Lint, «готово»                                                      |
+| `05-context-hygiene`        | Узкий контекст                                                      |
 | `06-fundamental-principles` | Мета-принципы: причина vs симптом, типы, эталоны, минимализм правил |
-| `90-project-context` | Контекст шаблона / продукта |
-| `nuxt-template` | Nuxt 4, Vue, SCSS, линты |
+| `90-project-context`        | Контекст шаблона / продукта                                         |
+| `nuxt-template`             | Nuxt 4, Vue, SCSS, линты                                            |
 
 ## После копирования в новый репозиторий
 
