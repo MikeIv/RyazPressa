@@ -1,6 +1,11 @@
 declare module 'nuxt/schema' {
+  interface RuntimeConfig {
+    /** Slug сайта для localhost (`NUXT_SITE_SLUG`). */
+    siteSlug: string
+  }
+
   interface PublicRuntimeConfig {
-    /** Базовый URL HTTP API (без завершающего `/`). Пример: `https://api.example.com` или `/api` для прокси. */
+    /** Запасной base URL API, если не задан в конфиге сайта. */
     apiBase: string
   }
 }

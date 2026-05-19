@@ -2,12 +2,13 @@ import type { H3Event } from 'h3'
 import { normalizeApiBaseUrl } from '#shared/utils/normalizeApiBaseUrl'
 
 /**
- * HTTP-клиент из Nitro к внешнему API с тем же `public.apiBase`, что на клиенте.
- * Передавайте `event` в обработчиках, если позже понадобится проксировать заголовки / cookies.
+ * HTTP-клиент из Nitro к API текущего сайта (`event.context.site.apiBase`).
+ * Передавайте `event` в обработчиках route/api.
  */
 export function serverApi(event?: H3Event) {
   const config = event ? useRuntimeConfig(event) : useRuntimeConfig()
-  const baseURL = normalizeApiBaseUrl(config.public.apiBase)
+  const siteApiBase = event?.context.site?.apiBase
+  const baseURL = normalizeApiBaseUrl(siteApiBase ?? config.public.apiBase)
 
   return $fetch.create({
     baseURL,

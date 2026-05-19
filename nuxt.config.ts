@@ -42,8 +42,12 @@ export default defineNuxtConfig({
     },
   },
 
-  /** Публичные ключи доступны на клиенте; секреты — только в корне `runtimeConfig` без `public` */
+  /**
+   * `siteSlug` — сайт на localhost (см. `NUXT_SITE_SLUG` в `.env`).
+   * `public.apiBase` — запасной fallback; в проде база API задаётся в `shared/sites/*.ts`.
+   */
   runtimeConfig: {
+    siteSlug: process.env.NUXT_SITE_SLUG ?? 'ryazpressa',
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE ?? '',
     },
