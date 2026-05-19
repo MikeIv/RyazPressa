@@ -1,7 +1,7 @@
-/* Минимальная палитра — расширять под FoodSity / макеты */
 :root {
   --fs-color-bg: #fff;
   --fs-color-surface: #f6f6f6;
+  --fs-color-surface-alt: #eff3f7;
   --fs-color-text: #1a1a1a;
   --fs-color-text-muted: #666;
   --fs-color-border: #e0e0e0;
@@ -10,4 +10,14 @@
   --fs-color-error: #c62828;
 
   --fs-font-sans: system-ui, -apple-system, 'Segoe UI', roboto, 'Helvetica Neue', arial, sans-serif;
+  --fs-font-serif: georgia, 'Times New Roman', serif;
+
+  /* Site-theme переменные — перезаписываются плагином site-theme.client.ts.
+     Fallback — значения из базовой палитры. */
+  --site-color-primary: var(--fs-color-primary);
+  --site-color-accent: var(--fs-color-error);
+  --site-color-text: var(--fs-color-text);
+  --site-color-background: var(--fs-color-bg);
+  --site-radius-sm: var(--fs-radius-sm);
+  --site-radius-md: var(--fs-radius-md);
 }

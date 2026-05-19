@@ -1,0 +1,28 @@
+@use '../tools/mixins' as mx;
+
+/* Центрирующий контейнер с адаптивными отступами */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: var(--fs-space-2);
+
+  @include mx.from-tablet {
+    padding-inline: var(--fs-space-3);
+  }
+
+  @include mx.from-desktop {
+    padding-inline: var(--fs-space-4);
+  }
+}
+
+/* Двухколоночная сетка: основной контент + сайдбар */
+.grid-content {
+  display: grid;
+  gap: var(--fs-space-3);
+
+  @include mx.from-desktop {
+    grid-template-columns: 1fr 320px;
+    gap: var(--fs-space-4);
+  }
+}
