@@ -24,6 +24,11 @@ export interface PaginatedResponse<T> {
   meta: PaginatedMeta
 }
 
+/** Ответ со списком без пагинации. */
+export interface ListResponse<T> {
+  data: T[]
+}
+
 export interface ApiErrorBody {
   statusCode: number
   message: string

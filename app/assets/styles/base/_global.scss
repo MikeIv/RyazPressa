@@ -71,6 +71,19 @@ button {
   border-radius: 2px;
 }
 
+/* Скрытый заголовок для скринридеров (a11y) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Skip-link — первый элемент страницы, скрыт до фокуса (a11y) */
 .skip-link {
   position: absolute;

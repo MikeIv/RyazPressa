@@ -1,50 +1,68 @@
 <script setup lang="ts">
-const { site, pending, error } = useSiteConfig()
+import type { NewsItem, PaginatedResponse } from '#shared/types/api'
+
+const { site } = useSiteConfig()
+
+const { data, pending, error } = useApiFetch<PaginatedResponse<NewsItem>>('/api/news', {
+  query: { perPage: 12 },
+})
+
+const news = computed(() => data.value?.data ?? [])
+
+useHead({
+  title: () => site.value?.name ?? 'Главная',
+})
 </script>
 
 <template>
-  <div :class="$style.root">
-    <h1>Ryazpressa Platform</h1>
+  <div :class="[$style.page, 'container']">
+    <h1 :class="$style.title">Новости</h1>
 
-    <p v-if="pending" :class="$style.status">Загрузка конфигурации сайта…</p>
-    <p v-else-if="error" :class="$style.status" role="alert">
-      Не удалось загрузить конфигурацию сайта.
-    </p>
-    <template v-else-if="site">
-      <p :class="$style.lead">
-        Текущий сайт: <strong>{{ site.name }}</strong> ({{ site.slug }})
-      </p>
-      <nav aria-label="Разделы сайта">
-        <ul :class="$style.navList">
-          <li v-for="item in site.nav" :key="item.to">
-            <NuxtLink :to="item.to">{{ item.label }}</NuxtLink>
-          </li>
-        </ul>
-      </nav>
-    </template>
+    <p v-if="pending" :class="$style.status" role="status">Загрузка новостей…</p>
+    <p v-else-if="error" :class="$style.status" role="alert">Не удалось загрузить новости.</p>
+
+    <ul v-else-if="news.length" :class="$style.list" role="list">
+      <li v-for="item in news" :key="item.id">
+        <NewsCard :item="item" />
+      </li>
+    </ul>
+
+    <p v-else :class="$style.status">Новостей пока нет.</p>
   </div>
 </template>
 
 <style module lang="scss">
-.root {
-  padding: var(--fs-space-6);
+@use '~/assets/styles/tools/mixins' as mx;
+
+.page {
+  padding-block: var(--fs-space-4);
 }
 
-.lead {
-  margin-block: var(--fs-space-4);
+.title {
+  font-size: var(--fs-text-3xl);
+  font-weight: var(--fs-weight-bold);
+  line-height: var(--fs-leading-tight);
+  margin-bottom: var(--fs-space-4);
 }
 
 .status {
-  margin-block: var(--fs-space-4);
-  color: var(--fs-color-muted, #666);
+  color: var(--fs-color-text-muted);
+  font-size: var(--fs-text-base);
 }
 
-.navList {
-  display: flex;
-  flex-wrap: wrap;
+.list {
+  display: grid;
   gap: var(--fs-space-3);
+  list-style: none;
   padding: 0;
   margin: 0;
-  list-style: none;
+
+  @include mx.from-tablet {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mx.from-desktop {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 </style>
