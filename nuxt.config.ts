@@ -59,6 +59,12 @@ export default defineNuxtConfig({
   },
 
   vite: {
+    server: isDev
+      ? {
+          /** Smoke-тест и локальные домены в hosts (см. docs/dev-multi-site.md) */
+          allowedHosts: true,
+        }
+      : undefined,
     build: {
       target: 'esnext',
       cssMinify: true,

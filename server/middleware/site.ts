@@ -1,7 +1,7 @@
-import { resolveSite } from '#shared/utils/resolveSite'
+import { getRequestHost, resolveSite } from '#shared/utils/resolveSite'
 
 export default defineEventHandler((event) => {
-  const host = getRequestHeader(event, 'host') ?? ''
+  const host = getRequestHost(event)
   const config = useRuntimeConfig(event)
   const fallbackSlug =
     typeof config.siteSlug === 'string' && config.siteSlug.trim()

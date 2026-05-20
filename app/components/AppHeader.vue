@@ -3,6 +3,14 @@ const { site } = useSiteConfig()
 const route = useRoute()
 
 const isMenuOpen = ref(false)
+const logoFailed = ref(false)
+
+watch(
+  () => site.value?.theme.logoSrc,
+  () => {
+    logoFailed.value = false
+  },
+)
 
 function toggleMenu() {
   isMenuOpen.value = !isMenuOpen.value
@@ -34,12 +42,13 @@ watch(
         :aria-label="`${site?.name ?? 'Главная'} — перейти на главную страницу`"
       >
         <img
-          v-if="site?.theme.logoSrc"
+          v-if="site?.theme.logoSrc && !logoFailed"
           :src="site.theme.logoSrc"
           :alt="site.theme.logoAlt"
           :class="$style.logoImg"
           width="160"
           height="40"
+          @error="logoFailed = true"
         />
         <span v-else :class="$style.logoText">{{ site?.name }}</span>
       </NuxtLink>
