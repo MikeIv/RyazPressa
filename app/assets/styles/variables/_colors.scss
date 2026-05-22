@@ -21,4 +21,10 @@
   --site-color-background: var(--fs-color-bg);
   --site-radius-sm: var(--fs-radius-sm);
   --site-radius-md: var(--fs-radius-md);
+  --site-header-gradient: linear-gradient(
+    90deg,
+    var(--fs-color-primary-strong) 0%,
+    var(--fs-color-primary) 45%,
+    var(--fs-color-error) 100%
+  );
 }

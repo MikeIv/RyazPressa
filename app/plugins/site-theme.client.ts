@@ -1,4 +1,5 @@
 import type { SiteTheme } from '#shared/types/site'
+import { buildHeaderGradient } from '#shared/utils/buildHeaderGradient'
 
 function applySiteTheme(theme: SiteTheme): void {
   const root = document.documentElement
@@ -8,6 +9,10 @@ function applySiteTheme(theme: SiteTheme): void {
   root.style.setProperty('--site-color-background', theme.colorBackground)
   root.style.setProperty('--site-radius-sm', theme.radiusSm)
   root.style.setProperty('--site-radius-md', theme.radiusMd)
+  root.style.setProperty(
+    '--site-header-gradient',
+    buildHeaderGradient(theme.colorPrimary, theme.colorAccent),
+  )
 }
 
 export default defineNuxtPlugin(() => {

@@ -1,5 +1,6 @@
 import type { H3Event } from 'h3'
 import { normalizeApiBaseUrl } from '#shared/utils/normalizeApiBaseUrl'
+import { applySiteSlugHeader } from '#shared/utils/applySiteSlugHeader'
 
 /**
  * HTTP-клиент из Nitro к API текущего сайта (`event.context.site.apiBase`).
@@ -12,6 +13,9 @@ export function serverApi(event?: H3Event) {
 
   return $fetch.create({
     baseURL,
+    onRequest({ options }) {
+      applySiteSlugHeader(options, event?.context.site?.slug)
+    },
     onResponseError(ctx) {
       if (import.meta.dev) {
         console.error('[serverApi]', String(ctx.request), ctx.response.status, ctx.response._data)

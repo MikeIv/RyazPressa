@@ -13,8 +13,17 @@ function getDayKeyFromDate(date: Date): string {
   return `${y}-${m}-${d}`
 }
 
+function parseDayKey(dayKey: string): { year: number; month: number; day: number } {
+  const [yearPart, monthPart, dayPart] = dayKey.split('-').map(Number)
+  return {
+    year: yearPart ?? 0,
+    month: monthPart ?? 1,
+    day: dayPart ?? 1,
+  }
+}
+
 function getDayOffsetFromKey(dayKey: string, now: Date): number {
-  const [year, month, day] = dayKey.split('-').map(Number)
+  const { year, month, day } = parseDayKey(dayKey)
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const itemStart = new Date(year, month - 1, day)
   return Math.round((todayStart.getTime() - itemStart.getTime()) / 86_400_000)
@@ -46,7 +55,7 @@ export function filterNewsTodayAndYesterday(
 
 /** Подпись разделителя: «Сегодня», «Вчера» или «19 мая». */
 export function formatNewsDayLabel(dayKey: string, now: Date = new Date()): string {
-  const [year, month, day] = dayKey.split('-').map(Number)
+  const { year, month, day } = parseDayKey(dayKey)
   const diffDays = getDayOffsetFromKey(dayKey, now)
 
   if (diffDays === 0) return 'Сегодня'

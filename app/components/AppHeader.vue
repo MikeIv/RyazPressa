@@ -113,12 +113,7 @@ watch(
 }
 
 .gradientBar {
-  background: linear-gradient(
-    90deg,
-    #b81d5c 0%,
-    #e85d04 45%,
-    #f2b705 100%
-  );
+  background: var(--site-header-gradient);
 }
 
 .gradientInner {
@@ -233,7 +228,7 @@ watch(
   height: 36px;
   border-radius: 50%;
   background: #fff;
-  color: #1e2a5a;
+  color: var(--site-color-primary);
   box-shadow: 0 2px 8px rgb(0 0 0 / 12%);
   transition: box-shadow 0.2s ease;
 

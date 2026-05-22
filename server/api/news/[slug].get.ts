@@ -1,4 +1,4 @@
-import { mockArticlesBySite } from '#shared/mock/news'
+import { getArticlesForSite } from '#shared/mock/siteMockAccess'
 
 export default defineEventHandler((event) => {
   const slug = getRouterParam(event, 'slug')
@@ -7,7 +7,7 @@ export default defineEventHandler((event) => {
   }
 
   const siteSlug = event.context.site.slug
-  const articles = mockArticlesBySite[siteSlug] ?? []
+  const articles = getArticlesForSite(siteSlug)
   const article = articles.find((a) => a.slug === slug)
 
   if (!article) {

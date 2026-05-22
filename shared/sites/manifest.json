@@ -1,0 +1,31 @@
+[
+  { "slug": "nesecretno", "name": "Не секретно", "domain": "nesecretno.ru" },
+  { "slug": "rodnoykray62", "name": "Родной край 62", "domain": "rodnoykray62.ru" },
+  { "slug": "denzadnem", "name": "День за днём", "domain": "denzadnem.su" },
+  { "slug": "rodnieistoki", "name": "Родные истоки", "domain": "rodnieistoki.ru" },
+  { "slug": "nashibudni", "name": "Наши будни", "domain": "nashibudni.ru" },
+  { "slug": "vteme62", "name": "В теме 62", "domain": "vteme62.ru" },
+  { "slug": "ezhednevnik62", "name": "Ежедневник 62", "domain": "ezhednevnik62.ru" },
+  { "slug": "nashazhizn", "name": "Наша жизнь", "domain": "нашажизнь.com" },
+  { "slug": "zvezda62", "name": "Звезда 62", "domain": "zvezda62.ru" },
+  { "slug": "po-sushchestvu", "name": "По существу", "domain": "по-существу.рф" },
+  { "slug": "vseputem62", "name": "Все путём 62", "domain": "vseputem62.ru" },
+  { "slug": "naslukhu", "name": "На слуху", "domain": "наслуху.su" },
+  { "slug": "rbninfo", "name": "RBN Info", "domain": "rbninfo.ru" },
+  { "slug": "chestnye-vesti", "name": "Честные вести", "domain": "честные-вести.рф" },
+  {
+    "slug": "prigorodnoe-soobshchenie",
+    "name": "Пригородное сообщение",
+    "domain": "пригородное-сообщение.рф"
+  },
+  { "slug": "vokruge62", "name": "Вокруг 62", "domain": "vokruge62.ru" },
+  { "slug": "zemlyaki", "name": "Земляки", "domain": "zemlyaki.su" },
+  { "slug": "nedelya-novostey", "name": "Неделя новостей", "domain": "неделя-новостей.su" },
+  { "slug": "mezhdu-strok", "name": "Между строк", "domain": "между-строк.рф" },
+  { "slug": "vkursedela", "name": "В курсе дела", "domain": "vkursedela.online" },
+  { "slug": "pulseoflife", "name": "Pulse of Life", "domain": "pulseoflife.ru" },
+  { "slug": "bezvariantov62", "name": "Без вариантов 62", "domain": "bezvariantov62.ru" },
+  { "slug": "iskra", "name": "Искра", "domain": "искра.online" },
+  { "slug": "nashevremya62", "name": "Наше время 62", "domain": "nashevremya62.ru" },
+  { "slug": "storonka62", "name": "Сторонка 62", "domain": "storonka62.ru" }
+]

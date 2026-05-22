@@ -97,6 +97,21 @@ if (lintable.length === 0) {
 const t0 = Date.now()
 const envClean = { ...process.env }
 delete envClean.NO_COLOR
+
+const validateSites = spawnSync('pnpm', ['validate:sites'], {
+  cwd: root,
+  stdio: 'inherit',
+  shell: true,
+  env: {
+    ...envClean,
+    FORCE_COLOR: '1',
+  },
+})
+
+if ((validateSites.status ?? 1) !== 0) {
+  process.exit(validateSites.status ?? 1)
+}
+
 const r = spawnSync('pnpm', ['exec', 'lint-staged', '--concurrent', 'false'], {
   cwd: root,
   stdio: 'inherit',

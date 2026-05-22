@@ -1,4 +1,5 @@
 import { joinApiUrl, normalizeApiBaseUrl } from '#shared/utils/normalizeApiBaseUrl'
+import { applySiteSlugHeader } from '#shared/utils/applySiteSlugHeader'
 import type { AsyncData, UseFetchOptions } from 'nuxt/app'
 import type { FetchError } from 'ofetch'
 
@@ -16,6 +17,7 @@ export function useApi() {
       if (base) {
         options.baseURL = base
       }
+      applySiteSlugHeader(options, site.value?.slug)
     },
     onResponseError(ctx) {
       if (import.meta.dev) {
@@ -41,5 +43,10 @@ export function useApiFetch<T = unknown>(
     joinApiUrl(site.value?.apiBase ?? runtimeConfig.public.apiBase, String(toValue(path))),
   )
 
-  return useFetch(request, options) as AsyncData<T, FetchError | null>
+  return useFetch(request, {
+    ...options,
+    onRequest({ options: requestOptions }) {
+      applySiteSlugHeader(requestOptions, site.value?.slug)
+    },
+  }) as AsyncData<T, FetchError | null>
 }

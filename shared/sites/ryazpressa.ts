@@ -1,4 +1,14 @@
 import type { SiteConfig } from '#shared/types/site'
+import { EXTENDED_SITE_NAV_ORDER, navFromSections } from '#shared/sites/baseSections'
+
+const ryazpressaSections = {
+  gallery: false,
+  documents: true,
+  contacts: true,
+  okruga: true,
+  ryadomSNami: true,
+  projects: true,
+} as const
 
 export const ryazpressaSite: SiteConfig = {
   slug: 'ryazpressa',
@@ -15,20 +25,6 @@ export const ryazpressaSite: SiteConfig = {
     logoSrc: '/sites/ryazpressa/logo.svg',
     logoAlt: 'Рязпресса',
   },
-  sections: {
-    gallery: false,
-    documents: true,
-    contacts: true,
-    okruga: true,
-    ryadomSNami: true,
-    projects: true,
-  },
-  nav: [
-    { label: 'Главная', to: '/' },
-    { label: 'Округа', to: '/okruga' },
-    { label: 'Рядом с нами', to: '/ryadom-s-nami' },
-    { label: 'Проекты', to: '/projects' },
-    { label: 'Контакты', to: '/contacts' },
-    { label: 'Документы', to: '/documents' },
-  ],
+  sections: { ...ryazpressaSections },
+  nav: navFromSections(ryazpressaSections, EXTENDED_SITE_NAV_ORDER),
 }

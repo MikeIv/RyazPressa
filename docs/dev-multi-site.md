@@ -1,5 +1,22 @@
 # Локальная разработка: несколько сайтов
 
+## Реестр сайтов
+
+Конфиги базовых изданий — `shared/sites/manifest.json` (25 сайтов + `ryazpressa` отдельно).
+Генерация placeholder-логотипов:
+
+```bash
+pnpm generate:logos
+```
+
+Проверка уникальности доменов и согласованности nav/sections:
+
+```bash
+pnpm validate:sites
+```
+
+Входит в `pnpm lint:all` и pre-commit (Husky).
+
 ## Переключение сайта на localhost
 
 В `.env`:

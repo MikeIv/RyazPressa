@@ -1,11 +1,11 @@
-import { mockNewsBySite } from '#shared/mock/news'
+import { getNewsForSite } from '#shared/mock/siteMockAccess'
 import { filterNewsTodayAndYesterday } from '#shared/utils/groupNewsByDay'
 import { paginate } from '#shared/utils/paginate'
 
 export default defineEventHandler((event) => {
   const siteSlug = event.context.site.slug
   const query = getQuery(event)
-  let items = mockNewsBySite[siteSlug] ?? []
+  let items = getNewsForSite(siteSlug)
 
   const category = query.category
   if (typeof category === 'string' && category.trim()) {

@@ -1,5 +1,5 @@
 /** Блокировка скролла и закрытие панели футера по Escape. */
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(() => {
   const { isOpen, close } = useFooterPanel()
 
   watch(isOpen, (open) => {
@@ -12,7 +12,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   window.addEventListener('keydown', onEscape)
 
-  nuxtApp.hook('app:beforeUnmount', () => {
+  onScopeDispose(() => {
     document.body.style.overflow = ''
     window.removeEventListener('keydown', onEscape)
   })
