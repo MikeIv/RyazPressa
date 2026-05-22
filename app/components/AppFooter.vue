@@ -5,7 +5,7 @@ const year = new Date().getFullYear()
 
 <template>
   <footer :class="$style.footer" role="contentinfo">
-    <div :class="[$style.inner, 'container']">
+    <div :class="[$style.inner, 'site-shell']">
       <p :class="$style.copy">
         &copy; {{ year }}&nbsp;{{ site?.name ?? '' }}. Все права защищены.
       </p>

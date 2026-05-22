@@ -17,7 +17,7 @@ useHead({ title: 'Фотогалерея' })
 </script>
 
 <template>
-  <div :class="[$style.page, 'container']">
+  <div :class="$style.page">
     <h1 :class="$style.title">Фотогалерея</h1>
 
     <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>

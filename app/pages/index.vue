@@ -4,10 +4,25 @@ import type { NewsItem, PaginatedResponse } from '#shared/types/api'
 const { site } = useSiteConfig()
 
 const { data, pending, error } = useApiFetch<PaginatedResponse<NewsItem>>('/api/news', {
-  query: { perPage: 12 },
+  query: { perPage: 4 },
+  key: 'news-feed',
 })
 
-const news = computed(() => data.value?.data ?? [])
+const {
+  data: asideData,
+  pending: asidePending,
+  error: asideError,
+} = useApiFetch<PaginatedResponse<NewsItem>>('/api/news', {
+  query: { perPage: 20, period: 'today-yesterday' },
+  key: 'news-aside-today',
+})
+
+const feedNews = computed(() => data.value?.data ?? [])
+const asideNews = computed(() => asideData.value?.data ?? [])
+const featured = computed(() => feedNews.value[0] ?? null)
+const feedRest = computed(() => feedNews.value.slice(1))
+const hasError = computed(() => Boolean(error.value))
+const hasAsideError = computed(() => Boolean(asideError.value))
 
 useHead({
   title: () => site.value?.name ?? 'Главная',
@@ -15,54 +30,84 @@ useHead({
 </script>
 
 <template>
-  <div :class="[$style.page, 'container']">
-    <h1 :class="$style.title">Новости</h1>
+  <div :class="$style.page">
+    <h1 class="visually-hidden">{{ site?.name ?? 'Главная' }}</h1>
 
-    <p v-if="pending" :class="$style.status" role="status">Загрузка новостей…</p>
-    <p v-else-if="error" :class="$style.status" role="alert">Не удалось загрузить новости.</p>
+    <section :class="$style.homeGrid" aria-labelledby="news-feed-heading">
+      <h2 id="news-feed-heading" class="visually-hidden">Лента новостей</h2>
 
-    <ul v-else-if="news.length" :class="$style.list" role="list">
-      <li v-for="item in news" :key="item.id">
-        <NewsCard :item="item" />
-      </li>
-    </ul>
+      <p v-if="pending" :class="$style.status" role="status">Загрузка ленты…</p>
+      <p v-else-if="hasError" :class="$style.status" role="alert">Не удалось загрузить ленту.</p>
+      <p v-else-if="!feedNews.length" :class="$style.status">Новостей в ленте пока нет.</p>
 
-    <p v-else :class="$style.status">Новостей пока нет.</p>
+      <NewsFeedFeatured v-if="featured" :class="$style.featured" :item="featured" />
+      <NewsAsideToday
+        :class="$style.aside"
+        :items="asideNews"
+        :pending="asidePending"
+        :error="hasAsideError"
+      />
+      <NewsFeedList v-if="feedRest.length" :class="$style.list" :items="feedRest" />
+    </section>
   </div>
 </template>
 
 <style module lang="scss">
 @use '~/assets/styles/tools/mixins' as mx;
+@use '~/assets/styles/variables/resolutions' as bp;
 
 .page {
-  padding-block: var(--fs-space-4);
+  min-width: 0;
+  padding-block: var(--fs-space-3) var(--fs-space-5);
+
+  @media (min-width: 1024px) {
+    padding-block: var(--fs-space-4) var(--fs-space-6);
+  }
 }
 
-.title {
-  font-size: var(--fs-text-3xl);
-  font-weight: var(--fs-weight-bold);
-  line-height: var(--fs-leading-tight);
-  margin-bottom: var(--fs-space-4);
+/* Мобильный порядок: featured → aside → list; десктоп: aside справа на две строки */
+.homeGrid {
+  display: grid;
+  gap: var(--fs-space-3);
+  min-width: 0;
+  grid-template-areas:
+    'featured'
+    'aside'
+    'list';
+
+  @include mx.from-desktop {
+    grid-template-columns: minmax(0, 1fr) 300px;
+    grid-template-areas:
+      'featured aside'
+      'list aside';
+    gap: var(--fs-space-4);
+    align-items: start;
+
+    @media (min-width: #{bp.$desktopMedium}) {
+      grid-template-columns: minmax(0, 1fr) 340px;
+    }
+  }
 }
 
 .status {
+  grid-column: 1 / -1;
+  margin: 0;
   color: var(--fs-color-text-muted);
   font-size: var(--fs-text-base);
 }
 
+.featured {
+  grid-area: featured;
+  min-width: 0;
+}
+
+.aside {
+  grid-area: aside;
+  min-width: 0;
+}
+
 .list {
-  display: grid;
-  gap: var(--fs-space-3);
-  list-style: none;
-  padding: 0;
-  margin: 0;
-
-  @include mx.from-tablet {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @include mx.from-desktop {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  grid-area: list;
+  min-width: 0;
 }
 </style>

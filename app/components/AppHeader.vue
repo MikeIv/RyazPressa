@@ -32,7 +32,7 @@ watch(
 <template>
   <header :class="$style.header" role="banner">
     <div :class="$style.gradientBar">
-      <div :class="[$style.gradientInner, 'container']">
+      <div :class="[$style.gradientInner, 'site-shell']">
         <AppHeaderLogo variant="mobile" :image-failed="logoFailed" @image-error="logoFailed = true" />
 
         <div :class="$style.gradientActions">
@@ -83,7 +83,7 @@ watch(
     </div>
 
     <div :class="$style.mainBar">
-      <div :class="[$style.mainInner, 'container']">
+      <div :class="[$style.mainInner, 'site-shell']">
         <AppHeaderLogo variant="desktop" :image-failed="logoFailed" @image-error="logoFailed = true" />
 
         <nav id="main-nav" :class="$style.nav" aria-label="Основная навигация">

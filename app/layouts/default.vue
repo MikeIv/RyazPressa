@@ -7,7 +7,9 @@ const { isOpen: isFooterOpen, close: closeFooter } = useFooterPanel()
     <a href="#main-content" class="skip-link">Перейти к основному содержимому</a>
     <AppHeader />
     <main id="main-content" :class="$style.main" tabindex="-1">
-      <slot />
+      <div class="site-shell">
+        <slot />
+      </div>
     </main>
 
     <button
@@ -38,6 +40,7 @@ const { isOpen: isFooterOpen, close: closeFooter } = useFooterPanel()
 
 .main {
   flex: 1;
+  min-width: 0;
 
   &:focus {
     outline: none;

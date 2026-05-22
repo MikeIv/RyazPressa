@@ -1,9 +1,12 @@
 @use '../tools/mixins' as mx;
+@use '../variables/resolutions' as bp;
 
-/* Центрирующий контейнер с адаптивными отступами */
+/* Обёртка контента: центрирование и max-width экрана */
+.site-shell,
 .container {
+  box-sizing: border-box;
   width: 100%;
-  max-width: 1280px;
+  max-width: bp.$desktopMax;
   margin-inline: auto;
   padding-inline: var(--fs-space-2);
 
@@ -16,13 +19,19 @@
   }
 }
 
-/* Двухколоночная сетка: основной контент + сайдбар */
+/* Двухколоночная сетка: лента + боковая колонка (образец rg.ru) */
 .grid-content {
   display: grid;
   gap: var(--fs-space-3);
+  min-width: 0;
 
   @include mx.from-desktop {
-    grid-template-columns: 1fr 320px;
+    grid-template-columns: minmax(0, 1fr) 300px;
     gap: var(--fs-space-4);
+    align-items: start;
+
+    @media (min-width: #{bp.$desktopMedium}) {
+      grid-template-columns: minmax(0, 1fr) 340px;
+    }
   }
 }

@@ -14,7 +14,7 @@ useHead({
 </script>
 
 <template>
-  <div :class="[$style.page, 'container']">
+  <div :class="$style.page">
     <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>
     <p v-else-if="error" :class="$style.status" role="alert">Не удалось загрузить раздел.</p>
 

@@ -13,7 +13,7 @@ useHead({
 </script>
 
 <template>
-  <article :class="[$style.page, 'container']">
+  <article :class="$style.page">
     <p v-if="pending" :class="$style.status" role="status">Загрузка статьи…</p>
     <p v-else-if="error" :class="$style.status" role="alert">Статья не найдена.</p>
 

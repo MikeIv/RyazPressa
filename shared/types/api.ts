@@ -52,11 +52,16 @@ export interface Article extends NewsItem {
   tags?: string[]
 }
 
+/** Период выборки для ленты новостей. */
+export type NewsListPeriod = 'today-yesterday'
+
 export interface NewsListParams {
   page?: number
   perPage?: number
   category?: string
   district?: string
+  /** Только сегодня и вчера (блок «Главное сегодня»). */
+  period?: NewsListPeriod
 }
 
 /** Элемент фотогалереи. */
