@@ -48,6 +48,8 @@ export default defineNuxtConfig({
    */
   runtimeConfig: {
     siteSlug: process.env.NUXT_SITE_SLUG ?? 'ryazpressa',
+    /** Mock API в Nitro; `false` — прокси на бэкенд через `serverApi` (см. `NUXT_USE_MOCK_API`). */
+    useMockApi: process.env.NUXT_USE_MOCK_API !== 'false',
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE ?? '',
     },

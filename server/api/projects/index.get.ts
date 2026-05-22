@@ -1,6 +1,5 @@
-import { mockProjects } from '#shared/mock/projects'
+import { mockProjectsIndex } from '../../mock/handlers/projects'
 
-export default defineEventHandler((event) => {
-  assertSection(event, 'projects', 'projects')
-  return { data: mockProjects }
-})
+export default defineEventHandler((event) =>
+  handleApiRequest(event, mockProjectsIndex, { section: { key: 'projects', label: 'projects' } }),
+)

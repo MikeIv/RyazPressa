@@ -1,16 +1,5 @@
-import { getMockDistrictDetail } from '#shared/mock/districts'
+import { mockDistrictBySlug } from '../../mock/handlers/districts'
 
-export default defineEventHandler((event) => {
-  assertSection(event, 'okruga', 'districts')
-  const slug = getRouterParam(event, 'slug')
-  if (!slug) {
-    throw createError({ statusCode: 400, statusMessage: 'Slug is required' })
-  }
-
-  const district = getMockDistrictDetail(slug)
-  if (!district) {
-    throw createError({ statusCode: 404, statusMessage: 'District not found' })
-  }
-
-  return district
-})
+export default defineEventHandler((event) =>
+  handleApiRequest(event, mockDistrictBySlug, { section: { key: 'okruga', label: 'districts' } }),
+)

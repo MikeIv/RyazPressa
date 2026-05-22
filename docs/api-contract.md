@@ -182,18 +182,27 @@ Query-параметры:
 
 ## Mock API (разработка фронта)
 
-Пока бэкенд не готов, Nitro отдаёт mock-данные по тем же путям:
+Пока бэкенд не готов, Nitro отдаёт mock-данные по тем же путям (`NUXT_USE_MOCK_API` по умолчанию включён):
 
-| Путь             | Файл mock                  |
-| ---------------- | -------------------------- |
-| `/api/news`      | `shared/mock/news.ts`      |
-| `/api/gallery`   | `shared/mock/gallery.ts`   |
-| `/api/documents` | `shared/mock/documents.ts` |
-| `/api/contacts`  | `shared/mock/contacts.ts`  |
-| `/api/districts` | `shared/mock/districts.ts` |
-| `/api/projects`  | `shared/mock/projects.ts`  |
-| `/api/near-us`   | `shared/mock/near-us.ts`   |
+| Путь             | Mock handler                        |
+| ---------------- | ----------------------------------- |
+| `/api/news`      | `server/mock/handlers/news.ts`      |
+| `/api/gallery`   | `server/mock/handlers/gallery.ts`   |
+| `/api/documents` | `server/mock/handlers/documents.ts` |
+| `/api/contacts`  | `server/mock/handlers/contacts.ts`  |
+| `/api/districts` | `server/mock/handlers/districts.ts` |
+| `/api/projects`  | `server/mock/handlers/projects.ts`  |
+| `/api/near-us`   | `server/mock/handlers/near-us.ts`   |
 
-Проверка: `pnpm dev` → `http://localhost:3000/api/news`
+### Переключение на реальный бэкенд
+
+```env
+NUXT_USE_MOCK_API=false
+NUXT_PUBLIC_API_BASE=https://api.example.com
+```
+
+Или задайте `apiBase` в конфиге сайта (`shared/sites/`). Nitro проксирует `/api/news` → `{apiBase}/news` через `serverApi` с заголовком `X-Site-Slug`.
+
+Проверка mock: `pnpm dev` → `http://localhost:3000/api/news`
 
 Переключение сайта на localhost: `NUXT_SITE_SLUG=nesecretno` в `.env`.

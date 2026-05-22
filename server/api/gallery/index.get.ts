@@ -1,11 +1,5 @@
-import { getGalleryForSite } from '#shared/mock/siteMockAccess'
-import { paginate } from '#shared/utils/paginate'
+import { mockGalleryIndex } from '../../mock/handlers/gallery'
 
-export default defineEventHandler((event) => {
-  assertSection(event, 'gallery', 'gallery')
-  const slug = event.context.site.slug
-  const items = getGalleryForSite(slug)
-  const { page, perPage } = parsePageQuery(event)
-
-  return paginate(items, page, perPage)
-})
+export default defineEventHandler((event) =>
+  handleApiRequest(event, mockGalleryIndex, { section: { key: 'gallery', label: 'gallery' } }),
+)

@@ -1,6 +1,7 @@
-import { mockNearUs } from '#shared/mock/near-us'
+import { mockNearUsIndex } from '../../mock/handlers/near-us'
 
-export default defineEventHandler((event) => {
-  assertSection(event, 'ryadomSNami', 'near-us')
-  return mockNearUs
-})
+export default defineEventHandler((event) =>
+  handleApiRequest(event, mockNearUsIndex, {
+    section: { key: 'ryadomSNami', label: 'near-us' },
+  }),
+)

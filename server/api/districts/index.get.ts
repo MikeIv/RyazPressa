@@ -1,6 +1,5 @@
-import { mockDistricts } from '#shared/mock/districts'
+import { mockDistrictsIndex } from '../../mock/handlers/districts'
 
-export default defineEventHandler((event) => {
-  assertSection(event, 'okruga', 'districts')
-  return { data: mockDistricts }
-})
+export default defineEventHandler((event) =>
+  handleApiRequest(event, mockDistrictsIndex, { section: { key: 'okruga', label: 'districts' } }),
+)

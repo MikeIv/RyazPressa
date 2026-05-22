@@ -48,4 +48,13 @@ curl -H "Host: ryazpressa.ru" http://localhost:3000/api/_site
 pnpm smoke:sites
 ```
 
-Проверяет: конфиг по домену, `gallery` только на nesecretno, новости на обоих сайтах.
+Проверяет: конфиг по домену, `gallery` только на базовых сайтах, новости, unknown host → 404.
+
+## Реальный бэкенд вместо mock
+
+```env
+NUXT_USE_MOCK_API=false
+NUXT_PUBLIC_API_BASE=https://api.example.com
+```
+
+Nitro проксирует `/api/*` на `{apiBase}/*` через `serverApi` (заголовок `X-Site-Slug`). Подробнее: [`docs/api-contract.md`](api-contract.md).
