@@ -24,6 +24,8 @@ export const ryazpressaSite: SiteConfig = {
     radiusMd: '8px',
     logoSrc: '/sites/ryazpressa/logo.svg',
     logoAlt: 'Рязпресса',
+    logoWidth: 300,
+    logoHeight: 28,
   },
   sections: { ...ryazpressaSections },
   nav: navFromSections(ryazpressaSections, EXTENDED_SITE_NAV_ORDER),

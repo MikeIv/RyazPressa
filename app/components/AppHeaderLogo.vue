@@ -30,8 +30,8 @@ const showImage = computed(
       :src="site?.theme.logoSrc"
       :alt="site?.theme.logoAlt ?? ''"
       :class="$style.img"
-      width="300"
-      height="28"
+      :width="site?.theme.logoWidth"
+      :height="site?.theme.logoHeight"
       @error="emit('imageError')"
     />
     <span v-else :class="$style.text">{{ site?.name }}</span>

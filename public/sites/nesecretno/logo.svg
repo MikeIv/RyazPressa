@@ -1,14 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="160" height="40" viewBox="0 0 160 40" role="img" aria-label="Не секретно">
-  <rect width="160" height="40" fill="#1e73be" rx="4" />
-  <text
-    x="80"
-    y="26"
-    text-anchor="middle"
-    fill="#ffffff"
-    font-family="system-ui, sans-serif"
-    font-size="13"
-    font-weight="700"
-  >
-    Не секретно
-  </text>
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 360 80" width="360" height="80" role="img" aria-label="Не секретно">
+  <circle cx="38" cy="40" r="26" stroke="#1a1a1a" stroke-width="3" />
+  <circle cx="38" cy="40" r="19" fill="#111111" />
+  <circle cx="38" cy="40" r="10" fill="#ffffff" />
+  <circle cx="41" cy="37" r="4" fill="#111111" />
+  <text x="78" y="54" fill="#1a1a1a" font-family="Arial Black, sans-serif" font-size="38" font-weight="900" letter-spacing="-1.6">НЕСЕКРЕТНО</text>
 </svg>

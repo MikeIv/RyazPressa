@@ -8,6 +8,10 @@ export interface SiteTheme {
   radiusMd: string
   logoSrc: string
   logoAlt: string
+  /** Натуральная ширина SVG — для aspect-ratio и CLS в шапке. */
+  logoWidth?: number
+  /** Натуральная высота SVG — для aspect-ratio и CLS в шапке. */
+  logoHeight?: number
 }
 
 /** Включённые разделы (для route middleware и навигации). */
