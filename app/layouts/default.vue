@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const { isOpen: isFooterOpen, close: closeFooter } = useFooterPanel()
+</script>
 
 <template>
   <div :class="$style.root">
@@ -7,7 +9,23 @@
     <main id="main-content" :class="$style.main" tabindex="-1">
       <slot />
     </main>
-    <AppFooter />
+
+    <button
+      v-if="isFooterOpen"
+      type="button"
+      :class="$style.backdrop"
+      aria-label="Закрыть меню сайта"
+      @click="closeFooter"
+    />
+
+    <div
+      id="site-footer-panel"
+      :class="[$style.footerPanel, isFooterOpen && $style.footerPanelOpen]"
+      :aria-hidden="!isFooterOpen"
+      :inert="!isFooterOpen"
+    >
+      <AppFooter />
+    </div>
   </div>
 </template>
 
@@ -21,9 +39,63 @@
 .main {
   flex: 1;
 
-  /* Убираем outline при программном фокусе (skip-link) */
   &:focus {
     outline: none;
+  }
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: rgb(0 0 0 / 40%);
+  cursor: pointer;
+  animation: backdrop-in 0.25s ease;
+}
+
+.footerPanel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 160;
+  max-height: min(85dvh, 640px);
+  overflow-y: auto;
+  transform: translateY(100%);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    transform 0.35s cubic-bezier(0.32, 0.72, 0, 1),
+    visibility 0.35s;
+  box-shadow: 0 -8px 32px rgb(0 0 0 / 18%);
+}
+
+.footerPanelOpen {
+  transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop {
+    animation: none;
+  }
+
+  .footerPanel {
+    transition: none;
   }
 }
 </style>
