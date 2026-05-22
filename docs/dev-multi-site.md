@@ -17,6 +17,30 @@ pnpm validate:sites
 
 Входит в `pnpm lint:all` и pre-commit (Husky).
 
+## Как добавить сайт
+
+### Базовое издание (gallery, documents, contacts)
+
+1. Запись в [`shared/sites/manifest.json`](../shared/sites/manifest.json):
+
+   ```json
+   { "slug": "example", "name": "Название", "domain": "example.ru" }
+   ```
+
+2. Цвета бренда в [`shared/sites/siteBrandColors.ts`](../shared/sites/siteBrandColors.ts).
+3. Логотип: `pnpm generate:logos` или положите `public/sites/{slug}/logo.svg`.
+4. Проверка: `pnpm validate:sites`.
+
+Конфиг, домены (apex + www + punycode для IDN), `sections` и `nav` собираются через `createBaseSiteConfig()`.
+
+### Расширенный сайт (округа, проекты, «Рядом с нами»)
+
+1. Файл `shared/sites/{slug}.ts` — см. [`shared/sites/_template.ts`](../shared/sites/_template.ts) и эталон [`ryazpressa.ts`](../shared/sites/ryazpressa.ts).
+2. Подключите в [`shared/sites/index.ts`](../shared/sites/index.ts) **перед** `...baseSiteConfigs`.
+3. Логотип в `public/sites/{slug}/logo.svg`, затем `pnpm validate:sites`.
+
+Mock-данные для новых базовых сайтов подтягиваются автоматически (fallback на `nesecretno`).
+
 ## Переключение сайта на localhost
 
 В `.env`:
@@ -27,7 +51,9 @@ NUXT_SITE_SLUG=ryazpressa
 NUXT_SITE_SLUG=nesecretno
 ```
 
-После смены перезапустите `pnpm dev`.
+После смены значения перезапустите `pnpm dev`.
+
+Если slug указан с опечаткой, API вернёт **404** с текстом `Unknown NUXT_SITE_SLUG "…"` и списком известных slug.
 
 ## Эмуляция домена (без смены .env)
 
@@ -48,7 +74,13 @@ curl -H "Host: ryazpressa.ru" http://localhost:3000/api/_site
 pnpm smoke:sites
 ```
 
-Проверяет: конфиг по домену, `gallery` только на базовых сайтах, новости, unknown host → 404.
+Проверяет все **26 сайтов** из реестра:
+
+- `GET /api/_site` по домену каждого сайта → корректный `slug` и `sections`
+- `ryazpressa.ru` — `gallery` выключена; базовый сайт — `gallery` включена
+- `ryazpressa.ru /api/gallery` → 404; базовый сайт `/api/gallery` → 200
+- `denzadnem.su /api/news` → непустой ответ
+- неизвестный host → 404
 
 ## Реальный бэкенд вместо mock
 

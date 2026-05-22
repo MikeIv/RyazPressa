@@ -9,6 +9,11 @@ function parseHostname(host: string): string {
   return host.split(':')[0]?.toLowerCase() ?? ''
 }
 
+/** localhost / 127.0.0.1 — эмуляция сайта через `NUXT_SITE_SLUG`. */
+export function isLocalDevHost(host: string): boolean {
+  return LOCAL_HOSTS.has(parseHostname(host))
+}
+
 /** Host из запроса: `X-Forwarded-Host` (прокси) или `Host`. */
 export function getRequestHost(event: H3Event): string {
   const forwarded = getRequestHeader(event, 'x-forwarded-host')
