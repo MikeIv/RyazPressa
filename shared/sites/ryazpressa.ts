@@ -14,7 +14,7 @@ export const ryazpressaSite: SiteConfig = {
   slug: 'ryazpressa',
   name: 'Рязпресса',
   domains: ['ryazpressa.ru', 'www.ryazpressa.ru'],
-  apiBase: '',
+  apiBase: 'https://api.ryazpressa.ru',
   theme: {
     colorPrimary: '#1a4b8c',
     colorAccent: '#c62828',
@@ -26,7 +26,10 @@ export const ryazpressaSite: SiteConfig = {
     logoAlt: 'Рязпресса',
     logoWidth: 300,
     logoHeight: 28,
+    faviconSrc: '/sites/ryazpressa/favicon.ico',
+    appleTouchIconSrc: '/sites/ryazpressa/apple-touch-icon.png',
   },
   sections: { ...ryazpressaSections },
-  nav: navFromSections(ryazpressaSections, EXTENDED_SITE_NAV_ORDER),
+  nav: navFromSections(ryazpressaSections, EXTENDED_SITE_NAV_ORDER, { homeLabel: 'Новости' }),
+  articlePathPrefix: '',
 }

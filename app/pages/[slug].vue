@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: 'news-article-legacy-redirect',
+  middleware: 'news-article-root',
 })
 </script>
 

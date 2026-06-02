@@ -15,7 +15,7 @@ export function isLocalDevHost(host: string): boolean {
 }
 
 /** Host из запроса: `X-Forwarded-Host` (прокси) или `Host`. */
-export function getRequestHost(event: H3Event): string {
+export function getSiteRequestHost(event: H3Event): string {
   const forwarded = getRequestHeader(event, 'x-forwarded-host')
   const raw = forwarded?.split(',')[0]?.trim() || getRequestHeader(event, 'host') || ''
   return raw

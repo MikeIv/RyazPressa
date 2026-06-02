@@ -10,10 +10,10 @@
 
 Сайт определяется по **домену запроса** (`Host`). Каждый сайт имеет свой `apiBase` (см. конфиги в `shared/sites/`).
 
-Рекомендуемый заголовок для явной идентификации (опционально):
+Рекомендуемый заголовок для явной идентификации (опционально; бэкенд ожидает **домен** сайта):
 
 ```http
-X-Site-Slug: ryazpressa
+X-Site-Slug: ryazpressa.ru
 ```
 
 ### Формат
@@ -70,7 +70,9 @@ Query-параметры:
 
 ### Новости
 
-#### `GET /news`
+> Бэкенд: `GET /api/posts` (вместо `/news`). Nitro проксирует `/api/news` → `/api/posts`.
+
+#### `GET /news` (фронт) / `GET /api/posts` (бэкенд)
 
 Лента новостей (главная, категории).
 
@@ -198,7 +200,7 @@ Query-параметры:
 
 ```env
 NUXT_USE_MOCK_API=false
-NUXT_PUBLIC_API_BASE=https://api.example.com
+NUXT_PUBLIC_API_BASE=https://api.ryazpressa.ru
 ```
 
 Или задайте `apiBase` в конфиге сайта (`shared/sites/`). Nitro проксирует `/api/news` → `{apiBase}/news` через `serverApi` с заголовком `X-Site-Slug`.

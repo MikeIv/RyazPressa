@@ -41,7 +41,7 @@ export interface NewsItem {
   title: string
   lead: string
   image?: ImageAsset
-  category?: string
+  category?: string | number
   publishedAt: IsoDateTime
 }
 

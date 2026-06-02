@@ -18,7 +18,8 @@
     "lint:all": "eslint . && prettier --check . && stylelint \"**/*.{vue,css}\" --allow-empty-input && pnpm validate:sites",
     "smoke:sites": "node scripts/smoke-sites.mjs",
     "validate:sites": "node scripts/validate-sites.mjs",
-    "generate:logos": "node scripts/generate-site-logos.mjs"
+    "generate:logos": "node scripts/generate-site-logos.mjs",
+    "generate:favicon:ryazpressa": "node scripts/generate-ryazpressa-favicon.mjs"
   },
   "dependencies": {
     "nuxt": "^4.4.2",
@@ -43,8 +44,10 @@
     "postcss-html": "^1.8.1",
     "prettier": "^3.8.3",
     "sass": "^1.99.0",
+    "sharp": "^0.34.5",
     "stylelint": "^17.11.0",
     "stylelint-config-recommended-vue": "^1.6.1",
+    "to-ico": "^1.1.5",
     "typescript": "~5.8.3",
     "vue-tsc": "^3.2.8"
   }

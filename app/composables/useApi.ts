@@ -1,5 +1,9 @@
-import { joinApiUrl, normalizeApiBaseUrl } from '#shared/utils/normalizeApiBaseUrl'
-import { applySiteSlugHeader } from '#shared/utils/applySiteSlugHeader'
+import {
+  isNitroApiPath,
+  resolveApiBaseUrl,
+  resolveClientApiUrl,
+} from '#shared/utils/normalizeApiBaseUrl'
+import { applySiteSlugHeader, siteApiIdentityFromPublic } from '#shared/utils/applySiteSlugHeader'
 import type { AsyncData, UseFetchOptions } from 'nuxt/app'
 import type { FetchError } from 'ofetch'
 
@@ -12,12 +16,15 @@ export function useApi() {
   const { site } = useSiteConfig()
 
   return $fetch.create({
-    onRequest({ options }) {
-      const base = normalizeApiBaseUrl(site.value?.apiBase ?? runtimeConfig.public.apiBase)
-      if (base) {
-        options.baseURL = base
+    onRequest({ request, options }) {
+      const requestPath = typeof request === 'string' ? request : String(request)
+      if (!isNitroApiPath(requestPath)) {
+        const base = resolveApiBaseUrl(site.value?.apiBase, runtimeConfig.public.apiBase)
+        if (base) {
+          options.baseURL = base
+        }
       }
-      applySiteSlugHeader(options, site.value?.slug)
+      applySiteSlugHeader(options, site.value ? siteApiIdentityFromPublic(site.value) : undefined)
     },
     onResponseError(ctx) {
       if (import.meta.dev) {
@@ -28,7 +35,7 @@ export function useApi() {
 }
 
 /**
- * Реактивный `useFetch` к API текущего сайта: URL из `apiBase` сайта + путь.
+ * Реактивный `useFetch` к API: пути `/api/*` — Nitro (mock/прокси), иначе `apiBase` + путь.
  * Второй аргумент — без `baseURL` и без дженерика на `UseFetchOptions` (ограничение типов Nuxt 4);
  * тип ответа задаётся параметром `T` у возвращаемого `AsyncData<T, …>`.
  */
@@ -40,13 +47,16 @@ export function useApiFetch<T = unknown>(
   const { site } = useSiteConfig()
 
   const request = computed(() =>
-    joinApiUrl(site.value?.apiBase ?? runtimeConfig.public.apiBase, String(toValue(path))),
+    resolveClientApiUrl(String(toValue(path)), site.value?.apiBase, runtimeConfig.public.apiBase),
   )
 
   return useFetch(request, {
     ...options,
     onRequest({ options: requestOptions }) {
-      applySiteSlugHeader(requestOptions, site.value?.slug)
+      applySiteSlugHeader(
+        requestOptions,
+        site.value ? siteApiIdentityFromPublic(site.value) : undefined,
+      )
     },
   }) as AsyncData<T, FetchError | null>
 }

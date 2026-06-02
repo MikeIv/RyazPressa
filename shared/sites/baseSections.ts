@@ -37,12 +37,17 @@ export const EXTENDED_SITE_NAV_ORDER: (keyof SiteSections)[] = [
   'documents',
 ]
 
-/** Навигация из включённых разделов (главная всегда первая). */
+/** Навигация из включённых разделов (главная/новости всегда первая). */
+export interface NavFromSectionsOptions {
+  homeLabel?: string
+}
+
 export function navFromSections(
   sections: SiteSections,
   order: readonly (keyof SiteSections)[] = NAV_ORDER,
+  options?: NavFromSectionsOptions,
 ): readonly SiteNavItem[] {
-  const items: SiteNavItem[] = [{ label: 'Главная', to: '/' }]
+  const items: SiteNavItem[] = [{ label: options?.homeLabel ?? 'Главная', to: '/' }]
 
   for (const key of order) {
     if (sections[key]) {

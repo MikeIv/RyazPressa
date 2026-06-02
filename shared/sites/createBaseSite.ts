@@ -20,5 +20,6 @@ export function createBaseSiteConfig(entry: SiteManifestEntry): SiteConfig {
     theme: createSiteTheme(entry.slug, entry.name, logoSrc),
     sections: { ...BASE_SITE_SECTIONS },
     nav: navFromSections(BASE_SITE_SECTIONS),
+    articlePathPrefix: '/news',
   }
 }

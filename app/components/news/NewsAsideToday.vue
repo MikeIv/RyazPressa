@@ -10,6 +10,7 @@ const props = defineProps<{
 }>()
 
 const dayGroups = computed(() => groupNewsByDay(props.items))
+const { articlePath } = useNewsArticlePath()
 </script>
 
 <template>
@@ -31,7 +32,7 @@ const dayGroups = computed(() => groupNewsByDay(props.items))
           <h3 :class="$style.dayHeading">{{ group.label }}</h3>
           <ul :class="$style.list" role="list">
             <li v-for="item in group.items" :key="item.id" :class="$style.item">
-              <NuxtLink :to="`/news/${item.slug}`" :class="$style.link">
+              <NuxtLink :to="articlePath(item.slug)" :class="$style.link">
                 <time :class="$style.time" :datetime="item.publishedAt">
                   {{ formatNewsTime(item.publishedAt) }}
                 </time>

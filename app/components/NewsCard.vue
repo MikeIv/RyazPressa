@@ -5,11 +5,13 @@ import type { NewsItem } from '#shared/types/api'
 defineProps<{
   item: NewsItem
 }>()
+
+const { articlePath } = useNewsArticlePath()
 </script>
 
 <template>
   <article :class="$style.card">
-    <NuxtLink :to="`/news/${item.slug}`" :class="$style.link">
+    <NuxtLink :to="articlePath(item.slug)" :class="$style.link">
       <img
         v-if="item.image"
         :src="item.image.url"

@@ -5,11 +5,13 @@ import type { NewsItem } from '#shared/types/api'
 defineProps<{
   item: NewsItem
 }>()
+
+const { articlePath } = useNewsArticlePath()
 </script>
 
 <template>
   <article :class="$style.row">
-    <NuxtLink :to="`/news/${item.slug}`" :class="$style.link">
+    <NuxtLink :to="articlePath(item.slug)" :class="$style.link">
       <div :class="$style.meta">
         <time :class="$style.time" :datetime="item.publishedAt">{{ formatNewsTime(item.publishedAt) }}</time>
         <span :class="$style.date">{{ formatNewsDateShort(item.publishedAt) }}</span>
@@ -18,7 +20,7 @@ defineProps<{
       <div :class="$style.content">
         <p v-if="item.category" :class="$style.category">{{ item.category }}</p>
         <h3 :class="$style.title">{{ item.title }}</h3>
-        <p :class="$style.lead">{{ item.lead }}</p>
+        <p v-if="item.lead" :class="$style.lead">{{ item.lead }}</p>
       </div>
 
       <div v-if="item.image" :class="$style.media">

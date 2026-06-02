@@ -39,6 +39,7 @@ const _baseSiteExample: SiteConfig = {
   },
   sections: { ...BASE_SITE_SECTIONS },
   nav: navFromSections(BASE_SITE_SECTIONS),
+  articlePathPrefix: '/news',
 }
 
 // --- Вариант B: расширенный сайт (как ryazpressa) ---
@@ -73,6 +74,7 @@ const _extendedSiteExample: SiteConfig = {
   },
   sections: { ..._extendedSections },
   nav: navFromSections(_extendedSections, EXTENDED_SITE_NAV_ORDER),
+  articlePathPrefix: '',
 }
 
 export {}

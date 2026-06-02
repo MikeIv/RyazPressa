@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { isRootNewsArticlePath, type NewsArticlePathPrefix } from '#shared/utils/newsArticlePath'
+
 const { site } = useSiteConfig()
 const route = useRoute()
 const { isOpen: isFooterOpen, toggle: toggleFooter, close: closeFooter } = useFooterPanel()
@@ -13,8 +15,14 @@ watch(
 )
 
 function isActive(to: string): boolean {
-  if (to === '/') return route.path === '/'
-  return route.path === to || route.path.startsWith(to + '/')
+  if (to === '/') {
+    if (route.path === '/') return true
+    const prefix = (site.value?.articlePathPrefix ?? '/news') as NewsArticlePathPrefix
+    if (isRootNewsArticlePath(route.path, prefix)) return true
+    if (route.path.startsWith('/news/')) return true
+    return false
+  }
+  return route.path === to || route.path.startsWith(`${to}/`)
 }
 
 function onSearchSubmit(event: Event): void {

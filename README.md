@@ -95,21 +95,22 @@ pnpm approve-builds --all
 
 ### Правила Cursor (Agent)
 
-Уже включены в шаблон — при развёртывании **дополнительно копировать не нужно**.
+Каталог **`.cursor/`** и **`AGENTS.md`** — **локально**, в git не коммитятся (см. [`.gitignore`](.gitignore)).
 
-| Назначение                   | Путь                                                                                                         |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Workflow (GSD + Superpowers) | [`.cursor/rules/00-workflow-core.mdc`](.cursor/rules/00-workflow-core.mdc) … `06-fundamental-principles.mdc` |
-| Контекст проекта             | [`.cursor/rules/90-project-context.mdc`](.cursor/rules/90-project-context.mdc)                               |
-| Nuxt / Vue / SCSS / API      | [`.cursor/rules/nuxt-template.mdc`](.cursor/rules/nuxt-template.mdc)                                         |
-| Планирование                 | [`.planning/PROJECT.md`](.planning/PROJECT.md)                                                               |
-| Справка                      | [`AGENTS.md`](AGENTS.md)                                                                                     |
+Синхронизация из [`_NUXT4_Template`](d:_WEB_Work_NUXT4_Template) или [`Cursor-rules-template`](d:_WEB_Work_Cursor-rules-template) — [`INSTALL-NUXT-VUE.md`](d:_WEB_Work_Cursor-rules-template\INSTALL-NUXT-VUE.md).
 
-Внешний репозиторий правил (обновления, другие проекты): `d:\_WEB\_Work\_Cursor-rules-template\`
+| Назначение                   | Путь (локально)                                                           |
+| ---------------------------- | ------------------------------------------------------------------------- |
+| Workflow (GSD + Superpowers) | `.cursor/rules/00-workflow-core.mdc` … `06-fundamental-principles.mdc`    |
+| Verify / code-review         | `.cursor/rules/04-verify-and-done.mdc`, `.cursor/commands/code-review.md` |
+| Контекст проекта             | `.cursor/rules/90-project-context.mdc`                                    |
+| Nuxt / Vue / SCSS / API      | `.cursor/rules/nuxt-template.mdc`                                         |
+| Планирование                 | `.planning/PROJECT.md`                                                    |
+| Справка                      | `AGENTS.md`                                                               |
 
 ### MCP (локально, опционально)
 
-Создайте `.cursor/mcp.json` (каталог `.cursor/` в `.gitignore`, кроме `rules/`):
+Создайте `.cursor/mcp.json` (весь каталог `.cursor/` в `.gitignore`):
 
 ```json
 {

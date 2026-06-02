@@ -1,5 +1,5 @@
 import { sites } from '#shared/sites'
-import { getRequestHost, isLocalDevHost, resolveSite } from '#shared/utils/resolveSite'
+import { getSiteRequestHost, isLocalDevHost, resolveSite } from '#shared/utils/resolveSite'
 
 const knownSiteSlugs = sites
   .map((entry) => entry.slug)
@@ -7,7 +7,7 @@ const knownSiteSlugs = sites
   .join(', ')
 
 export default defineEventHandler((event) => {
-  const host = getRequestHost(event)
+  const host = getSiteRequestHost(event)
   const config = useRuntimeConfig(event)
   const fallbackSlug =
     typeof config.siteSlug === 'string' && config.siteSlug.trim()
