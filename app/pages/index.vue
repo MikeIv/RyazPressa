@@ -40,14 +40,16 @@ useHead({
       <p v-else-if="hasError" :class="$style.status" role="alert">Не удалось загрузить ленту.</p>
       <p v-else-if="!feedNews.length" :class="$style.status">Новостей в ленте пока нет.</p>
 
-      <NewsFeedFeatured v-if="featured" :class="$style.featured" :item="featured" />
+      <div :class="$style.feedColumn">
+        <NewsFeedFeatured v-if="featured" :class="$style.featured" :item="featured" />
+        <NewsFeedList v-if="feedRest.length" :class="$style.list" :items="feedRest" />
+      </div>
       <NewsAsideToday
         :class="$style.aside"
         :items="asideNews"
         :pending="asidePending"
         :error="hasAsideError"
       />
-      <NewsFeedList v-if="feedRest.length" :class="$style.list" :items="feedRest" />
     </section>
   </div>
 </template>
@@ -65,7 +67,7 @@ useHead({
   }
 }
 
-/* Мобильный порядок: featured → aside → list; десктоп: aside справа на две строки */
+/* Мобильный порядок: featured → aside → list (display: contents на feedColumn) */
 .homeGrid {
   display: grid;
   gap: var(--fs-space-3);
@@ -77,15 +79,25 @@ useHead({
 
   @include mx.from-desktop {
     grid-template-columns: minmax(0, 1fr) 300px;
-    grid-template-areas:
-      'featured aside'
-      'list aside';
+    grid-template-areas: 'feedColumn aside';
     gap: var(--fs-space-4);
     align-items: start;
 
     @media (min-width: #{bp.$desktopMedium}) {
       grid-template-columns: minmax(0, 1fr) 340px;
     }
+  }
+}
+
+.feedColumn {
+  display: contents;
+
+  @include mx.from-desktop {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fs-space-4);
+    grid-area: feedColumn;
+    min-width: 0;
   }
 }
 
@@ -96,18 +108,21 @@ useHead({
   font-size: var(--fs-text-base);
 }
 
+.featured,
+.list,
+.aside {
+  min-width: 0;
+}
+
 .featured {
   grid-area: featured;
-  min-width: 0;
 }
 
 .aside {
   grid-area: aside;
-  min-width: 0;
 }
 
 .list {
   grid-area: list;
-  min-width: 0;
 }
 </style>
