@@ -58,8 +58,12 @@ function colorDistance(hex1: string, hex2: string): number {
 }
 
 /** Градиент верхней плашки header из primary/accent текущего сайта. */
-export function buildHeaderGradient(colorPrimary: string, colorAccent: string): string {
-  const start = mix(colorPrimary, '#000000', 0.22)
+export function buildHeaderGradient(
+  colorPrimary: string,
+  colorAccent: string,
+  gradientStart?: string,
+): string {
+  const start = gradientStart ?? mix(colorPrimary, '#000000', 0.22)
   let end = colorAccent
 
   if (relativeLuminance(colorAccent) < 0.08) {

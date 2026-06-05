@@ -11,7 +11,7 @@ function applySiteTheme(theme: SiteTheme): void {
   root.style.setProperty('--site-radius-md', theme.radiusMd)
   root.style.setProperty(
     '--site-header-gradient',
-    buildHeaderGradient(theme.colorPrimary, theme.colorAccent),
+    buildHeaderGradient(theme.colorPrimary, theme.colorAccent, theme.headerGradientStart),
   )
 }
 

@@ -20,6 +20,7 @@ export const ryazpressaSite: SiteConfig = {
     colorAccent: '#c62828',
     colorText: '#1a1a1a',
     colorBackground: '#ffffff',
+    headerGradientStart: '#ffffff',
     radiusSm: '4px',
     radiusMd: '8px',
     logoSrc: '/sites/ryazpressa/logo.svg',

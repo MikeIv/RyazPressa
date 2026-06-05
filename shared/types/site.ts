@@ -18,6 +18,8 @@ export interface SiteTheme {
   faviconSrc?: string
   /** Apple Touch Icon (например `/sites/ryazpressa/apple-touch-icon.png`). */
   appleTouchIconSrc?: string
+  /** Левый край градиента header (по умолчанию — затемнённый primary). */
+  headerGradientStart?: string
 }
 
 /** Включённые разделы (для route middleware и навигации). */
