@@ -130,3 +130,12 @@ pnpm approve-builds --all
 - Документация продукта — в **`docs/`** (по мере появления).
 - [Nuxt 4](https://nuxt.com/docs/4.x/getting-started/introduction)
 - [Деплой](https://nuxt.com/docs/getting-started/deployment)
+
+### Variant 3 — чистая статическая SPA (бэкенд отдаёт и статику, и /api/\*)
+
+Для деплоя без Nitro (рекомендуемый путь для production):
+
+- `pnpm generate` (или `pnpm build` + только публичная часть).
+- См. точную инструкцию и чек-лист для DevOps (тестовый деплой минимум двух сайтов): `docs/deployment-static-spa.md`.
+
+В этом режиме один и тот же бандл статики раздаётся на всех контент-доменах; сайт определяется рантайм по домену через ответ бэкенда `/api/_site`.

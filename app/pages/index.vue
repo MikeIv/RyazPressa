@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NewsItem, PaginatedResponse } from '#shared/types/api'
+import { filterNewsTodayAndYesterday } from '#shared/utils/groupNewsByDay'
 
 const { site } = useSiteConfig()
 
@@ -13,12 +14,17 @@ const {
   pending: asidePending,
   error: asideError,
 } = useApiFetch<PaginatedResponse<NewsItem>>('/api/news', {
-  query: { perPage: 20, period: 'today-yesterday' },
+  // Do not rely on special "period" param for initial Variant 3 backend implementation.
+  // Client-side filter below ensures "today-yesterday" behavior for the aside block.
+  query: { perPage: 20 },
   key: 'news-aside-today',
 })
 
 const feedNews = computed(() => data.value?.data ?? [])
-const asideNews = computed(() => asideData.value?.data ?? [])
+const asideNews = computed(() => {
+  const raw = asideData.value?.data ?? []
+  return filterNewsTodayAndYesterday(raw)
+})
 const featured = computed(() => feedNews.value[0] ?? null)
 const feedRest = computed(() => feedNews.value.slice(1))
 const hasError = computed(() => Boolean(error.value))

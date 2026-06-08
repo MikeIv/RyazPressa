@@ -20,14 +20,12 @@ export default defineNuxtConfig({
   },
 
   devtools: {
-    /** В production-сборке DevTools не подключаем — меньше шум и размер. */
     enabled: isDev,
     timeline: { enabled: isDev },
   },
 
   typescript: {
     strict: true,
-    /** Проверка типов на `nuxt build` / `nuxt generate`, без замедления каждого сохранения в dev */
     typeCheck: 'build',
   },
 
@@ -44,14 +42,23 @@ export default defineNuxtConfig({
 
   /**
    * `siteSlug` — сайт на localhost (см. `NUXT_SITE_SLUG` в `.env`).
-   * `public.apiBase` — запасной fallback; в проде база API задаётся в `shared/sites/*.ts`.
+   * `public.apiBase` — запасной fallback; в проде база API задаётся в `shared/sites/*.ts` или
+   * возвращается бэкендом в `PublicSiteConfig.apiBase` (ответ `/api/_site`).
+   *
+   * Variant 3 (SPA static deploy — бэкенд отдаёт и статику, и /api/* на контент-доменах):
+   * - Для тестового/прод деплоя используйте `pnpm generate` (или `pnpm build` + берите только public-часть).
+   * - Nitro-сервер для фронтенда не требуется.
+   * - Все контрактные вызовы `/api/*` (в т.ч. критический `/api/_site`) идут относительными путями на текущий origin.
+   * - Бэкенд на тех же доменах отвечает за мультитенантность (по Host), section gating, данные и конфиг сайта.
+   * - Точная инструкция и чек-лист для DevOps (тест на двух сайтах): docs/deployment-static-spa-variant3.md
    */
   runtimeConfig: {
     siteSlug: process.env.NUXT_SITE_SLUG ?? 'ryazpressa',
-    /** Mock API в Nitro; `false` — прокси на бэкенд через `serverApi` (см. `NUXT_USE_MOCK_API`). */
+    /** Mock / proxy только для dev. В чистом статическом Variant 3 не используется. */
     useMockApi: process.env.NUXT_USE_MOCK_API !== 'false',
     public: {
-      // '' / undefined — нет внешней базы (Nitro-прокси или относительные пути). site-specific apiBase приоритетнее.
+      // '' / undefined — относительные пути (рекомендуется для Variant 3 co-located static + API).
+      // site-specific apiBase (из /api/_site) имеет приоритет, если для сайта API на отдельном origin.
       apiBase: process.env.NUXT_PUBLIC_API_BASE ?? undefined,
     },
   },
@@ -76,5 +83,7 @@ export default defineNuxtConfig({
 
   nitro: {
     compressPublicAssets: true,
+    // В Variant 3 статического SPA (без Nitro в рантайме) для продакшена используется только
+    // сгенерированная статика (public assets после generate/build). Серверная часть Nitro не запускается.
   },
 })

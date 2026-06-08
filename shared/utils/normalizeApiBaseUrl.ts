@@ -27,11 +27,24 @@ export function joinApiUrl(base: unknown, pathSegment: string): string {
   return `${b}${path}`
 }
 
+/**
+ * Contract API paths served by backend on the content domain (Variant 3 static SPA).
+ * These must stay relative so the browser calls the backend on the *same origin* that served the SPA.
+ * (Name kept for minimal diff; previously "Nitro paths".)
+ */
 export function isNitroApiPath(pathSegment: string): boolean {
   const path = pathSegment.trim()
   return path.startsWith('/api/') || path.startsWith('api/')
 }
 
+/**
+ * Build final URL for client calls.
+ *
+ * Variant 3:
+ * - /api/* (frontend contract) → relative path only (current origin). Backend co-located on the domain
+ *   handles multi-tenancy via Host, returns correct data + /api/_site config for that site.
+ * - Everything else → use site.apiBase (preferred, from the /api/_site response) or global fallback.
+ */
 export function resolveClientApiUrl(
   pathSegment: string,
   siteBase: unknown,
