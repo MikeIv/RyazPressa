@@ -26,7 +26,8 @@ const _baseSiteExample: SiteConfig = {
   slug: 'example',
   name: 'Пример',
   domains: ['example.ru', 'www.example.ru'],
-  apiBase: '',
+  // apiBase: не указываем для базовых — fallback на глобальный NUXT_PUBLIC_API_BASE (см. createBaseSiteConfig).
+  // При необходимости переопределить — указать здесь строкой.
   theme: {
     colorPrimary: '#1e73be',
     colorAccent: '#008ca8',
@@ -61,7 +62,8 @@ const _extendedSiteExample: SiteConfig = {
   slug: 'example-extended',
   name: 'Пример расширенный',
   domains: ['example-extended.ru', 'www.example-extended.ru'],
-  apiBase: '',
+  // apiBase: не указываем — будет использован глобальный fallback (NUXT_PUBLIC_API_BASE).
+  // Для site-specific базы укажите значение здесь (как в ryazpressa.ts).
   theme: {
     colorPrimary: '#1a4b8c',
     colorAccent: '#c62828',

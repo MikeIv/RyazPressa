@@ -51,7 +51,8 @@ export default defineNuxtConfig({
     /** Mock API в Nitro; `false` — прокси на бэкенд через `serverApi` (см. `NUXT_USE_MOCK_API`). */
     useMockApi: process.env.NUXT_USE_MOCK_API !== 'false',
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE ?? '',
+      // '' / undefined — нет внешней базы (Nitro-прокси или относительные пути). site-specific apiBase приоритетнее.
+      apiBase: process.env.NUXT_PUBLIC_API_BASE ?? undefined,
     },
   },
 

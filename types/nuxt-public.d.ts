@@ -7,8 +7,8 @@ declare module 'nuxt/schema' {
   }
 
   interface PublicRuntimeConfig {
-    /** Запасной base URL API, если не задан в конфиге сайта. */
-    apiBase: string
+    /** Запасной base URL API, если не задан в конфиге сайта ('' / undefined → нет внешней базы, только Nitro или относительные пути). */
+    apiBase?: string
   }
 }
 

@@ -42,7 +42,8 @@ export interface SiteConfig {
   slug: string
   name: string
   domains: readonly string[]
-  apiBase: string
+  /** База API для этого сайта. Если не задана (undefined), используется глобальный runtimeConfig.public.apiBase как fallback. */
+  apiBase?: string
   theme: SiteTheme
   sections: SiteSections
   nav: readonly SiteNavItem[]
