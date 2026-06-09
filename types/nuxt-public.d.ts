@@ -14,7 +14,7 @@ declare module 'nuxt/schema' {
      * Специальный base для начального запроса конфига сайта (`/api/_site`).
      * Если задан — клиент делает абсолютный запрос на этот хост (например https://api.ryazpressa.ru),
      * чтобы бэкенд всегда видел Host: api.ryazpressa.ru.
-     * В заголовке X-Original-Host при этом передаётся реальный контент-домен.
+     * В заголовках X-Forwarded-Host и X-Forwarded-Proto передаётся реальный контент-домен.
      */
     siteConfigApiBase?: string
   }
