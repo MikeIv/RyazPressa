@@ -42,15 +42,12 @@ export default defineNuxtConfig({
 
   /**
    * `siteSlug` — сайт на localhost (см. `NUXT_SITE_SLUG` в `.env`).
-   * `public.apiBase` — запасной fallback; в проде база API задаётся в `shared/sites/*.ts` или
-   * возвращается бэкендом в `PublicSiteConfig.apiBase` (ответ `/api/_site`).
+   * `public.apiBase` — единый API-хост для всех сайтов (`NUXT_PUBLIC_API_BASE`, напр. https://api.ryazpressa.ru).
+   * Сайт передаётся заголовком `X-Site-Slug` (apex-домен контент-хоста).
    *
-   * Variant 3 (SPA static deploy — бэкенд отдаёт и статику, и /api/* на контент-доменах):
-   * - Для тестового/прод деплоя используйте `pnpm generate` (или `pnpm build` + берите только public-часть).
-   * - Nitro-сервер для фронтенда не требуется.
-   * - Все контрактные вызовы `/api/*` (в т.ч. критический `/api/_site`) идут относительными путями на текущий origin.
-   * - Бэкенд на тех же доменах отвечает за мультитенантность (по Host), section gating, данные и конфиг сайта.
-   * - Точная инструкция и чек-лист для DevOps (тест на двух сайтах): docs/deployment-static-spa.md (раздел Variant 3)
+   * Static SPA (pnpm generate): без `apiBase` — относительные `/api/*` на контент-домен (Nitro mock в dev).
+   * С `apiBase` — все `/api/*` на общий API; на бэкенде нужен CORS + чтение `X-Site-Slug`.
+   * Инструкция DevOps: docs/deployment-static-spa.md
    */
   runtimeConfig: {
     siteSlug: process.env.NUXT_SITE_SLUG ?? 'ryazpressa',
@@ -60,16 +57,10 @@ export default defineNuxtConfig({
       /** Slug сайта на localhost — для `X-Site-Slug` при cross-origin `/api/_site`. */
       siteSlug: process.env.NUXT_SITE_SLUG ?? 'ryazpressa',
 
-      // '' / undefined — относительные пути (рекомендуется для Variant 3 co-located static + API).
-      // site-specific apiBase (из /api/_site) имеет приоритет, если для сайта API на отдельном origin.
+      // Единый API для всех сайтов. Пусто — относительные /api/* (dev mock / прокси на контент-домене).
       apiBase: process.env.NUXT_PUBLIC_API_BASE ?? undefined,
 
-      /**
-       * Если задано — первый запрос /api/_site делается абсолютным на этот адрес
-       * (браузер пошлёт Host именно этого хоста, например api.ryazpressa.ru).
-       * Используйте, когда бэкенд хочет видеть фиксированный Host для _site.
-       * Пример: https://api.ryazpressa.ru
-       */
+      /** @deprecated Используйте `NUXT_PUBLIC_API_BASE`. Оставлено для обратной совместимости CI. */
       siteConfigApiBase: process.env.NUXT_PUBLIC_SITE_CONFIG_API_BASE ?? undefined,
     },
   },

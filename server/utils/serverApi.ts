@@ -8,7 +8,7 @@ import { applySiteSlugHeader, siteApiIdentityFromConfig } from '#shared/utils/ap
  */
 export function serverApi(event?: H3Event) {
   const config = event ? useRuntimeConfig(event) : useRuntimeConfig()
-  const baseURL = resolveApiBaseUrl(event?.context.site?.apiBase, config.public.apiBase)
+  const baseURL = resolveApiBaseUrl(undefined, config.public.apiBase)
 
   if (!baseURL) {
     throw createError({

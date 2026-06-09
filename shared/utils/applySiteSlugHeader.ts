@@ -1,4 +1,14 @@
+import type { PublicSiteConfig } from '#shared/types/site'
+import { resolveApiSiteHostForSiteConfig } from '#shared/utils/guessApiSiteHost'
 import { getPrimarySiteDomain } from '#shared/utils/getPrimarySiteDomain'
+
+interface BrowserWindowLike {
+  location: {
+    host: string
+    hostname: string
+    protocol: string
+  }
+}
 
 /** Домен или slug для заголовка `X-Site-Slug` (бэкенд определяет сайт по домену). */
 export interface SiteApiIdentity {
@@ -47,4 +57,41 @@ export function siteApiIdentityFromPublic(site: {
     slug: site.slug,
     domain: site.apiSiteHost,
   }
+}
+
+/** Домен для `X-Site-Slug`: из `/api/_site` или по hostname до загрузки конфига. */
+export function resolveClientSiteApiIdentity(
+  site: PublicSiteConfig | null | undefined,
+  devSiteSlug?: string,
+): string | undefined {
+  if (site) {
+    return site.apiSiteHost.trim() || site.slug.trim() || undefined
+  }
+
+  const browserWindow = (globalThis as typeof globalThis & { window?: BrowserWindowLike }).window
+  if (!browserWindow) return undefined
+
+  return resolveApiSiteHostForSiteConfig(browserWindow.location.hostname, devSiteSlug)
+}
+
+/** Заголовки для cross-origin вызовов на общий API-хост (`api.ryazpressa.ru`). */
+export function applyClientApiRequestHeaders(
+  options: { headers?: HeadersInit },
+  params: {
+    site?: PublicSiteConfig | null
+    devSiteSlug?: string
+    crossOrigin: boolean
+  },
+): void {
+  applySiteSlugHeader(options, resolveClientSiteApiIdentity(params.site, params.devSiteSlug))
+
+  if (!params.crossOrigin) return
+
+  const browserWindow = (globalThis as typeof globalThis & { window?: BrowserWindowLike }).window
+  if (!browserWindow) return
+
+  const headers = new Headers(options.headers)
+  headers.set('X-Forwarded-Host', browserWindow.location.host)
+  headers.set('X-Forwarded-Proto', browserWindow.location.protocol.replace(':', ''))
+  options.headers = headers
 }

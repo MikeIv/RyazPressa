@@ -1,31 +1,24 @@
 import type { PublicSiteConfig } from '#shared/types/site'
-import { getSiteConfigFetchParams, readSiteConfigApiBase } from '#shared/utils/siteConfigFetch'
+import { getSiteConfigFetchParams, readApiBase } from '#shared/utils/siteConfigFetch'
 
 /**
- * URL и опции `useFetch` для `/api/_site` из `runtimeConfig.public`.
- * Тип `siteConfigApiBase` — в `types/nuxt-public.d.ts` (augment `nuxt/schema`).
+ * URL и опции `useFetch` для `/api/_site` из глобального `runtimeConfig.public.apiBase`.
  */
 export function useSiteConfigFetchParams() {
   const publicConfig = useRuntimeConfig().public
-  const siteConfigApiBase =
-    'siteConfigApiBase' in publicConfig ? publicConfig.siteConfigApiBase : undefined
-
+  const apiBase =
+    readApiBase('apiBase' in publicConfig ? publicConfig.apiBase : undefined) ??
+    readApiBase('siteConfigApiBase' in publicConfig ? publicConfig.siteConfigApiBase : undefined)
   const siteSlug = 'siteSlug' in publicConfig ? publicConfig.siteSlug : undefined
 
-  return getSiteConfigFetchParams(
-    readSiteConfigApiBase(siteConfigApiBase),
-    typeof siteSlug === 'string' ? siteSlug : undefined,
-  )
+  return getSiteConfigFetchParams(apiBase, typeof siteSlug === 'string' ? siteSlug : undefined)
 }
 
 /**
- * Конфиг текущего сайта (по домену запроса). Кэшируется на время сессии.
+ * Конфиг текущего сайта. Кэшируется на время сессии.
  *
- * Если в runtimeConfig.public.siteConfigApiBase задан адрес (например https://api.ryazpressa.ru),
- * то запрос /api/_site делается абсолютным на этот хост.
- * Браузер в этом случае отправит Host: api.ryazpressa.ru (как просили DevOps).
- * Мы дополнительно отправляем X-Forwarded-Host, X-Forwarded-Proto и X-Site-Slug (apex-домен),
- * как требует бэкенд на api-хосте.
+ * При `NUXT_PUBLIC_API_BASE` запрос идёт на общий API-хост с `X-Site-Slug`
+ * (и `X-Forwarded-Host` при cross-origin).
  */
 export function useSiteConfig() {
   const { url, options } = useSiteConfigFetchParams()
