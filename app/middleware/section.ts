@@ -1,3 +1,4 @@
+import { useSiteConfigFetchParams } from '~/composables/useSiteConfig'
 import type { PublicSiteConfig, SiteSections } from '#shared/types/site'
 
 export default defineNuxtRouteMiddleware(async (to) => {
