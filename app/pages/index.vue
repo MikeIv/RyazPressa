@@ -5,30 +5,15 @@ import { filterNewsTodayAndYesterday } from '#shared/utils/groupNewsByDay'
 const { site } = useSiteConfig()
 
 const { data, pending, error } = useApiFetch<PaginatedResponse<NewsItem>>('/api/news', {
-  query: { perPage: 4 },
-  key: 'news-feed',
-})
-
-const {
-  data: asideData,
-  pending: asidePending,
-  error: asideError,
-} = useApiFetch<PaginatedResponse<NewsItem>>('/api/news', {
-  // Do not rely on special "period" param for initial Variant 3 backend implementation.
-  // Client-side filter below ensures "today-yesterday" behavior for the aside block.
   query: { perPage: 20 },
-  key: 'news-aside-today',
+  key: 'news-home',
 })
 
-const feedNews = computed(() => data.value?.data ?? [])
-const asideNews = computed(() => {
-  const raw = asideData.value?.data ?? []
-  return filterNewsTodayAndYesterday(raw)
-})
-const featured = computed(() => feedNews.value[0] ?? null)
-const feedRest = computed(() => feedNews.value.slice(1))
+const allNews = computed(() => data.value?.data ?? [])
+const featured = computed(() => allNews.value[0] ?? null)
+const feedRest = computed(() => allNews.value.slice(1, 4))
+const asideNews = computed(() => filterNewsTodayAndYesterday(allNews.value))
 const hasError = computed(() => Boolean(error.value))
-const hasAsideError = computed(() => Boolean(asideError.value))
 
 useHead({
   title: () => site.value?.name ?? 'Главная',
@@ -44,7 +29,7 @@ useHead({
 
       <p v-if="pending" :class="$style.status" role="status">Загрузка ленты…</p>
       <p v-else-if="hasError" :class="$style.status" role="alert">Не удалось загрузить ленту.</p>
-      <p v-else-if="!feedNews.length" :class="$style.status">Новостей в ленте пока нет.</p>
+      <p v-else-if="!allNews.length" :class="$style.status">Новостей в ленте пока нет.</p>
 
       <div :class="$style.feedColumn">
         <NewsFeedFeatured v-if="featured" :class="$style.featured" :item="featured" />
@@ -53,8 +38,8 @@ useHead({
       <NewsAsideToday
         :class="$style.aside"
         :items="asideNews"
-        :pending="asidePending"
-        :error="hasAsideError"
+        :pending="pending"
+        :error="hasError"
       />
     </section>
   </div>

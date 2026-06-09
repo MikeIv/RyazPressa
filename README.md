@@ -12,7 +12,7 @@
 2. В **`package.json`**: поле **`name`** (и при желании `description` / приватность).
 3. **`README.md`**: заголовок и описание под ваш продукт.
 4. **`app/pages/index.vue`**: заголовок и текст приветствия.
-5. **`cp .env.example .env`**: задайте **`NUXT_PUBLIC_API_BASE`**, если фронт ходит на отдельный API (иначе оставьте пустым — относительные пути к текущему origin).
+5. **`cp .env.example .env`**: для прода задайте **`NUXT_PUBLIC_API_BASE=https://api.ryazpressa.ru`** (единый API для всех сайтов).
 6. **`pnpm install`** → **`pnpm run build`** и **`pnpm run lint:all`** —
    убедитесь, что всё зелёное.
 
@@ -86,12 +86,11 @@ pnpm approve-builds --all
 
 Сервер Nitro — в **`server/`** (`api/`, `routes/`, `middleware/`, `plugins/`, `utils/`).
 
-## HTTP API (каркас)
+## HTTP API
 
-- База запросов: **`runtimeConfig.public.apiBase`** ← **`NUXT_PUBLIC_API_BASE`** ([`.env.example`](.env.example)).
-- Клиент: **`useApi()`** (`$fetch` с `baseURL`) и **`useApiFetch()`** (полный URL = `apiBase` + путь, без `baseURL` в опциях `useFetch`) — [`app/composables/useApi.ts`](app/composables/useApi.ts).
-- Сервер: **`serverApi(event?)`** — [`server/utils/serverApi.ts`](server/utils/serverApi.ts); URL — [`shared/utils/normalizeApiBaseUrl.ts`](shared/utils/normalizeApiBaseUrl.ts) (`normalizeApiBaseUrl`, `joinApiUrl`).
-- Типизация `public.apiBase` — [`types/nuxt-public.d.ts`](types/nuxt-public.d.ts). Приватные ключи `runtimeConfig` добавляйте в `nuxt.config` и отдельное расширение `RuntimeConfig` в `types/`.
+- Прод: **`NUXT_PUBLIC_API_BASE`** → все `/api/*` на общий хост; сайт — **`X-Site-Slug`**.
+- Клиент: **`useApiFetch()`** — [`app/composables/useApi.ts`](app/composables/useApi.ts), маппинг путей — [`shared/utils/clientApiBridge.ts`](shared/utils/clientApiBridge.ts).
+- Dev: Nitro mock / proxy — [`server/utils/serverApi.ts`](server/utils/serverApi.ts).
 
 ### Правила Cursor (Agent)
 
@@ -127,15 +126,18 @@ pnpm approve-builds --all
 
 ## Документация
 
-- Документация продукта — в **`docs/`** (по мере появления).
-- [Nuxt 4](https://nuxt.com/docs/4.x/getting-started/introduction)
-- [Деплой](https://nuxt.com/docs/getting-started/deployment)
+| Документ                                                         | Назначение                             |
+| ---------------------------------------------------------------- | -------------------------------------- |
+| [docs/deployment-static-spa.md](docs/deployment-static-spa.md)   | Деплой статики + direct API для DevOps |
+| [docs/optimization-plan.md](docs/optimization-plan.md)           | План волн, чек-листы, статус rollout   |
+| [docs/api-contract.md](docs/api-contract.md)                     | Контракт REST API для бэкенда          |
+| [Nuxt 4](https://nuxt.com/docs/4.x/getting-started/introduction) | Фреймворк                              |
 
-### Variant 3 — чистая статическая SPA (бэкенд отдаёт и статику, и /api/\*)
+### Production deploy
 
-Для деплоя без Nitro (рекомендуемый путь для production):
+```bash
+NUXT_PUBLIC_API_BASE=https://api.ryazpressa.ru pnpm generate
+# артефакт: .output/public/
+```
 
-- `pnpm generate` (или `pnpm build` + только публичная часть).
-- См. точную инструкцию и чек-лист для DevOps (тестовый деплой минимум двух сайтов): `docs/deployment-static-spa.md`.
-
-В этом режиме один и тот же бандл статики раздаётся на всех контент-доменах; сайт определяется рантайм по домену через ответ бэкенда `/api/_site`.
+CI: [`.gitlab-ci.yml`](.gitlab-ci.yml) — lint, typecheck, generate. Один бандл на все 26 сайтов; идентификация через `X-Site-Slug`.
