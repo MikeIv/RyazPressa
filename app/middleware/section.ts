@@ -1,14 +1,13 @@
-import { useSiteConfigFetchParams } from '~/composables/useSiteConfig'
-import type { PublicSiteConfig, SiteSections } from '#shared/types/site'
+import { ensureSiteConfigLoaded } from '~/composables/useSiteConfig'
+import type { SiteSections } from '#shared/types/site'
 
 export default defineNuxtRouteMiddleware(async (to) => {
   const section = to.meta.section as keyof SiteSections | undefined
   if (!section) return
 
-  const { url, options } = useSiteConfigFetchParams()
-  const { data: site } = await useFetch<PublicSiteConfig>(url, options)
+  const site = await ensureSiteConfigLoaded()
 
-  if (!site.value?.sections[section]) {
+  if (!site?.sections[section]) {
     throw createError({
       statusCode: 404,
       statusMessage: 'Раздел недоступен на этом сайте',

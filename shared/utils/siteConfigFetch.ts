@@ -3,6 +3,9 @@ import { normalizeApiBaseUrl } from '#shared/utils/normalizeApiBaseUrl'
 import { normalizePublicSiteConfig } from '#shared/utils/normalizePublicSiteConfig'
 import type { PublicSiteConfig } from '#shared/types/site'
 
+/** Ключ `useFetch` / `useNuxtData` для конфига сайта (singleton на приложение). */
+export const SITE_CONFIG_KEY = 'site-config' as const
+
 /** Безопасное чтение `runtimeConfig.public.apiBase` (в т.ч. при `unknown` из env). */
 export function readApiBase(apiBase: unknown): string | undefined {
   return typeof apiBase === 'string' ? apiBase : undefined
@@ -15,7 +18,8 @@ export function resolveSiteConfigRequestUrl(apiBase: string | undefined): string
 }
 
 export interface SiteConfigFetchOptions {
-  key: string
+  key: typeof SITE_CONFIG_KEY
+  watch: false
   transform: (body: unknown) => PublicSiteConfig
   onRequest: (ctx: { options: { headers?: HeadersInit } }) => void
 }
@@ -28,7 +32,8 @@ export function buildSiteConfigFetchOptions(
   const crossOrigin = Boolean(normalizeApiBaseUrl(apiBase))
 
   return {
-    key: 'site-config',
+    key: SITE_CONFIG_KEY,
+    watch: false,
     transform: normalizePublicSiteConfig,
     onRequest: ({ options }) => {
       applyClientApiRequestHeaders(options, {
