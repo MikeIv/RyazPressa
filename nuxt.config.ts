@@ -50,7 +50,7 @@ export default defineNuxtConfig({
    * - Nitro-сервер для фронтенда не требуется.
    * - Все контрактные вызовы `/api/*` (в т.ч. критический `/api/_site`) идут относительными путями на текущий origin.
    * - Бэкенд на тех же доменах отвечает за мультитенантность (по Host), section gating, данные и конфиг сайта.
-   * - Точная инструкция и чек-лист для DevOps (тест на двух сайтах): docs/deployment-static-spa-variant3.md
+   * - Точная инструкция и чек-лист для DevOps (тест на двух сайтах): docs/deployment-static-spa.md (раздел Variant 3)
    */
   runtimeConfig: {
     siteSlug: process.env.NUXT_SITE_SLUG ?? 'ryazpressa',

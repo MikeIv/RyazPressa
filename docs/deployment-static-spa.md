@@ -5,6 +5,10 @@
 - `ryazpressa.ru` / `www.ryazpressa.ru` (расширенный сайт: округа, проекты, «Рядом с нами» и т.д.)
 - `nesecretno.ru` (базовый сайт: галерея + документы + контакты)
 
+**Текущий тестовый хост (на момент актуализации инструкции):**
+Для первого сайта (ryazpressa) статика разворачивается на `https://web.ryazpressa.ru/` (а не сразу на финальный ryazpressa.ru).
+Бэкенд **должен** при `Host: web.ryazpressa.ru` (и `www.web.ryazpressa.ru`) возвращать полный конфиг ryazpressa (расширенные разделы, `articlePathPrefix: ""`, соответствующая тема/навигация).
+
 Как только эти два сайта будут работать end-to-end (корректный конфиг сайта, тема, навигация, новости и хотя бы один закрытый раздел), начинаем подключать остальные.
 
 ---
@@ -31,6 +35,23 @@ pnpm generate          # рекомендуется для чистой стат
 # или
 pnpm build             # затем берём только публичную/статическую часть
 ```
+
+### NUXT_PUBLIC_API_BASE при сборке Variant 3
+
+**Важно для DevOps:** в чистом статическом Variant 3 (без Nitro в проде) переменная `NUXT_PUBLIC_API_BASE` **почти не влияет** на основные вызовы API.
+
+- Все контрактные запросы SPA (`/api/_site`, `/api/news`, `/api/documents` и т.д.) **намеренно** делаются относительными путями (к текущему origin, т.е. на контент-домен `ryazpressa.ru` и т.п.).
+- Это реализовано в `resolveClientApiUrl` + `isNitroApiPath` (см. `shared/utils/normalizeApiBaseUrl.ts`).
+- `NUXT_PUBLIC_API_BASE` (который попадает в `runtimeConfig.public.apiBase`) используется **только** как fallback для не-контрактных прямых вызовов (если такие появятся) и/или для site-specific `apiBase` из ответа `/api/_site`.
+
+**Что это означает на практике:**
+
+- Если ваш бэкенд отдаёт `/api/*` на тех же доменах, где лежит статика (рекомендуемая co-location модель) — **можно вообще не передавать** `NUXT_PUBLIC_API_BASE` при `pnpm generate`. Оставьте пустым.
+- Если вы всё равно указываете `NUXT_PUBLIC_API_BASE=https://api.ryazpressa.ru pnpm generate` — основные запросы `/api/...` из браузера **всё равно пойдут на `https://ryazpressa.ru/api/...`** (относительно), а не напрямую на api-поддомен. Это ожидаемое поведение.
+- Чтобы запросы "ушли на хост API" — нужно на веб-сервере контент-домена проксировать `location /api/` на ваш API-бэкенд (см. раздел 3 ниже), сохраняя заголовок `Host` (или `X-Forwarded-Host`) оригинального контент-домена. Бэкенд по `Host` определяет сайт и отдаёт правильные данные.
+
+**Как проверить, что переменная "встроилась" в билд (опционально):**
+После generate можно поискать в файлах `.output/public/_nuxt/*.js` упоминания значения (или временно добавить лог `console.log(useRuntimeConfig().public.apiBase)` перед сборкой).
 
 **Что брать на деплой:**
 
@@ -88,27 +109,39 @@ robots.txt
 
 ```nginx
 server {
-    server_name ryazpressa.ru www.ryazpressa.ru;
+    # Текущий тест: web.ryazpressa.ru (позже добавьте ryazpressa.ru + www)
+    server_name web.ryazpressa.ru www.web.ryazpressa.ru ryazpressa.ru www.ryazpressa.ru;
 
-    root /var/www/ryazpressa-static;   # дерево из .output/public
+    root /var/www/ryazpressa-static;   # дерево из .output/public (один и тот же бандл)
 
     # Статические ассеты (точные файлы выигрывают)
     location / {
         try_files $uri $uri/ /index.html;
     }
 
-    # API — прокси на бэкенд, сохраняем Host
+    # API — прокси на бэкенд, **обязательно** сохраняем оригинальный Host
     location /api/ {
         proxy_pass http://your-backend-upstream;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Host $host;
         proxy_set_header X-Forwarded-Proto $scheme;
-        # при необходимости передавайте другие заголовки
+        # ...
     }
 }
 ```
 
 То же самое (или через wildcard/map) сделайте для `nesecretno.ru`.
+
+**Критично для теста:** при запросе на `web.ryazpressa.ru/api/_site` в прокси должен уйти заголовок `Host: web.ryazpressa.ru`. Бэкенд по этому Host должен вернуть ryazpressa-конфиг.
+
+**Пример текущей проблемы (на 9 июня 2026):**
+
+```bash
+curl -i -H "Host: web.ryazpressa.ru" https://api.ryazpressa.ru/api/_site
+# → HTTP/1.1 404 Not Found ... "File not found."
+```
+
+Это значит, что на `api.ryazpressa.ru` путь `/api/_site` (даже с правильным Host) пока не обслуживается новым бэкендом. Нужно исправить routing / поднять обработчик, прежде чем SPA на `web.ryazpressa.ru` сможет стартовать.
 
 Если используете CDN / S3 + CloudFront / статический хостинг в бакете:
 
@@ -121,7 +154,7 @@ server {
 
 Фронтенд ожидает, что бэкенд реализует **фронтенд-контракт** на контент-доменах.
 
-Для запроса с `Host: ryazpressa.ru` (или `www.ryazpressa.ru`, `X-Forwarded-Host` и т.д.) бэкенд должен вести себя как «сайт ryazpressa».
+Для запроса с `Host: web.ryazpressa.ru` (текущий тест) / `www.web.ryazpressa.ru` / `ryazpressa.ru` / `www.ryazpressa.ru` (или через `X-Forwarded-Host`) бэкенд должен вести себя как «сайт ryazpressa» и возвращать соответствующий ryazpressa-конфиг.
 
 ### 4.1 Обязательно: `GET /api/_site`
 
@@ -241,17 +274,22 @@ HTML в полях `content` — санитизированный.
 ## 5. Чек-лист верификации (после деплоя двух сайтов)
 
 1. Статические файлы:
-   - `https://ryazpressa.ru/` загружает оболочку SPA.
-   - `https://ryazpressa.ru/_nuxt/...js` и `/sites/ryazpressa/logo.svg` возвращают реальные ассеты (200, корректный content-type).
+   - `https://web.ryazpressa.ru/` (текущий тест) или `https://ryazpressa.ru/` загружает оболочку SPA.
+   - Соответствующие пути `_nuxt/...js`, `/sites/ryazpressa/logo.svg` и т.д. возвращают реальные ассеты (200 + правильный Content-Type).
    - То же самое для `nesecretno.ru`.
 
 2. Конфиг сайта (самое важное):
-   - `curl -H "Host: ryazpressa.ru" https://ryazpressa.ru/api/_site` (или открыть в браузере) → 200 + JSON с `slug: "ryazpressa"`, корректными `sections`, `theme`, `articlePathPrefix: ""`.
-   - То же для `nesecretno.ru` → `slug: "nesecretno"`, `articlePathPrefix: "/news"`, только базовые разделы.
+   - **Текущий тест (web.ryazpressa.ru):**
+     `curl -i -H "Host: web.ryazpressa.ru" https://web.ryazpressa.ru/api/_site`
+     (или через прямой бэкенд: `curl -i -H "Host: web.ryazpressa.ru" https://api.ryazpressa.ru/api/_site`)
+     Должен вернуть 200 + JSON с `slug: "ryazpressa"`, `articlePathPrefix: ""`, расширенными разделами (okruga, ryadomSNami, projects = true), правильной темой.
+   - **Финальный прод (когда переедем):**
+     `curl -i -H "Host: ryazpressa.ru" https://ryazpressa.ru/api/_site` → тот же ryazpressa-конфиг.
+   - Для nesecretno (тест и прод одинаково): `curl -i -H "Host: nesecretno.ru" .../api/_site` → `slug: "nesecretno"`, `articlePathPrefix: "/news"`, только базовые разделы.
 
 3. Поведение SPA:
-   - На домене ryazpressa: название сайта, цвета (primary/accent), логотип и основная навигация соответствуют конфигу ryazpressa. Расширенные разделы (Округа, Проекты, Рядом с нами) видны в навигации.
-   - На домене nesecretno: другое название/цвета/логотип, только базовые пункты навигации (Галерея, Документы, Контакты). Расширенных разделов в навигации нет.
+   - На текущем тестовом домене `web.ryazpressa.ru` (и позже на ryazpressa.ru): название, цвета, логотип и навигация — как у ryazpressa. Видны расширенные разделы (Округа, Проекты, Рядом с нами).
+   - На nesecretno.ru: другой брендинг, только базовые разделы (Галерея, Документы, Контакты).
    - Открытие URL отключённого раздела на «чужом» сайте даёт 404 (клиентский или от бэкенда).
 
 4. Данные:

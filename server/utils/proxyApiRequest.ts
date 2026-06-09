@@ -30,6 +30,13 @@ export async function proxyApiRequest(event: H3Event): Promise<unknown> {
   const { pathname } = getRequestURL(event)
   const api = serverApi(event)
 
+  if (import.meta.dev) {
+    console.log(
+      `[proxyApiRequest] ${event.method} ${pathname} → real backend ` +
+        `(NUXT_USE_MOCK_API=false + NUXT_PUBLIC_API_BASE or site.apiBase)`,
+    )
+  }
+
   try {
     const raw = await api(toBackendPath(pathname), {
       method: event.method,
@@ -48,6 +55,10 @@ export async function proxyApiRequest(event: H3Event): Promise<unknown> {
           meta: { ...list.meta, total: data.length, totalPages: data.length > 0 ? 1 : 0 },
         }
       }
+    }
+
+    if (import.meta.dev) {
+      console.log(`[proxyApiRequest] success for ${pathname} (proxied + normalized)`)
     }
 
     return result

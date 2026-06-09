@@ -13,7 +13,10 @@ const ryazpressaSections = {
 export const ryazpressaSite: SiteConfig = {
   slug: 'ryazpressa',
   name: 'Рязпресса',
-  domains: ['ryazpressa.ru', 'www.ryazpressa.ru'],
+  // Основные прод-домены + текущий тестовый хост (web.ryazpressa.ru).
+  // В Variant 3 (статический деплой) разрешение сайта в рантайме идёт через ответ бэкенда /api/_site,
+  // но в dev (Nitro) resolveSite/getSiteByDomain использует этот список (в т.ч. для эмуляции Host).
+  domains: ['ryazpressa.ru', 'www.ryazpressa.ru', 'web.ryazpressa.ru', 'www.web.ryazpressa.ru'],
   apiBase: 'https://api.ryazpressa.ru',
   theme: {
     colorPrimary: '#1a4b8c',
