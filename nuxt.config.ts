@@ -60,6 +60,14 @@ export default defineNuxtConfig({
       // '' / undefined — относительные пути (рекомендуется для Variant 3 co-located static + API).
       // site-specific apiBase (из /api/_site) имеет приоритет, если для сайта API на отдельном origin.
       apiBase: process.env.NUXT_PUBLIC_API_BASE ?? undefined,
+
+      /**
+       * Если задано — первый запрос /api/_site делается абсолютным на этот адрес
+       * (браузер пошлёт Host именно этого хоста, например api.ryazpressa.ru).
+       * Используйте, когда бэкенд хочет видеть фиксированный Host для _site.
+       * Пример: https://api.ryazpressa.ru
+       */
+      siteConfigApiBase: process.env.NUXT_PUBLIC_SITE_CONFIG_API_BASE ?? undefined,
     },
   },
 
