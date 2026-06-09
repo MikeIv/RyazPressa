@@ -258,7 +258,7 @@ HTML в полях `content` — санитизированный.
      Должен вернуть 200 + JSON с `slug: "ryazpressa"`, `articlePathPrefix: ""`, расширенными разделами, правильной темой.
    - **Финальный прод (когда переедем):**
      `curl -i -H "Host: ryazpressa.ru" https://ryazpressa.ru/api/_site` → тот же ryazpressa-конфиг.
-   - Для nesecretno (тест и прод одинаково): `curl -i -H "Host: nesecretno.ru" .../api/_site` → `slug: "nesecretno"`, `articlePathPrefix: "/news"`, только базовые разделы.
+   - Для nesecretno (`web.nesecretno.ru` / `nesecretno.ru`): `curl -s -H "X-Site-Slug: nesecretno.ru" https://api.ryazpressa.ru/api/_site` → `slug: "nesecretno"`, `articlePathPrefix: "/news"`, только базовые разделы. Детальный статус: [checklist-web-nesecretno.md](./checklist-web-nesecretno.md).
 
 3. Поведение SPA:
    - На текущем тестовом домене `web.ryazpressa.ru` (и позже на ryazpressa.ru): название, цвета, логотип и навигация — как у ryazpressa. Видны расширенные разделы (Округа, Проекты, Рядом с нами).
@@ -296,7 +296,7 @@ HTML в полях `content` — санитизированный.
 
 Кратко:
 
-- Подключить `nesecretno.ru` (второй тестовый сайт).
+- `web.nesecretno.ru` подключён (статика); бэкенд-контракт — [checklist-web-nesecretno.md](./checklist-web-nesecretno.md).
 - Прогнать все разделы ryazpressa (okruga, projects, documents, …).
 - Убрать `X-Forwarded-*` с фронта (достаточно `X-Site-Slug`).
 - Серверный `period=today-yesterday` для блока «Главное сегодня».
