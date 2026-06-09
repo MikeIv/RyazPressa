@@ -1,16 +1,12 @@
+import { applySiteSlugHeader } from '#shared/utils/applySiteSlugHeader'
+import { guessApiSiteHostFromHostname } from '#shared/utils/guessApiSiteHost'
 import { normalizeApiBaseUrl } from '#shared/utils/normalizeApiBaseUrl'
-
-type SiteConfigPublicRuntimeConfig = {
-  siteConfigApiBase?: unknown
-}
+import { normalizePublicSiteConfig } from '#shared/utils/normalizePublicSiteConfig'
+import type { PublicSiteConfig } from '#shared/types/site'
 
 /** Безопасное чтение `runtimeConfig.public.siteConfigApiBase` (в т.ч. при `unknown` из env). */
-export function readSiteConfigApiBase(
-  publicRuntimeConfig: SiteConfigPublicRuntimeConfig,
-): string | undefined {
-  return typeof publicRuntimeConfig.siteConfigApiBase === 'string'
-    ? publicRuntimeConfig.siteConfigApiBase
-    : undefined
+export function readSiteConfigApiBase(siteConfigApiBase: unknown): string | undefined {
+  return typeof siteConfigApiBase === 'string' ? siteConfigApiBase : undefined
 }
 
 /** URL для запроса конфига сайта: относительный или абсолютный на `siteConfigApiBase`. */
@@ -35,10 +31,14 @@ export function applySiteConfigProxyHeaders(options: { headers?: HeadersInit }):
   headers.set('X-Forwarded-Host', browserWindow.location.host)
   headers.set('X-Forwarded-Proto', browserWindow.location.protocol.replace(':', ''))
   options.headers = headers
+
+  const apiSiteHost = guessApiSiteHostFromHostname(browserWindow.location.hostname)
+  applySiteSlugHeader(options, apiSiteHost)
 }
 
 export interface SiteConfigFetchOptions {
   key: string
+  transform: (body: unknown) => PublicSiteConfig
   onRequest?: (ctx: { options: { headers?: HeadersInit } }) => void
 }
 
@@ -46,20 +46,23 @@ export interface SiteConfigFetchOptions {
 export function buildSiteConfigFetchOptions(
   siteConfigApiBase: string | undefined,
 ): SiteConfigFetchOptions {
+  const base: SiteConfigFetchOptions = {
+    key: 'site-config',
+    transform: normalizePublicSiteConfig,
+  }
+
   if (!siteConfigApiBase) {
-    return { key: 'site-config' }
+    return base
   }
 
   return {
-    key: 'site-config',
+    ...base,
     onRequest: ({ options }) => applySiteConfigProxyHeaders(options),
   }
 }
 
-/** URL и опции `useFetch` для `/api/_site` из `runtimeConfig.public`. */
-export function getSiteConfigFetchParams(publicRuntimeConfig: SiteConfigPublicRuntimeConfig) {
-  const siteConfigApiBase = readSiteConfigApiBase(publicRuntimeConfig)
-
+/** URL и опции `useFetch` для `/api/_site` по значению `siteConfigApiBase`. */
+export function getSiteConfigFetchParams(siteConfigApiBase: string | undefined) {
   return {
     url: resolveSiteConfigRequestUrl(siteConfigApiBase),
     options: buildSiteConfigFetchOptions(siteConfigApiBase),

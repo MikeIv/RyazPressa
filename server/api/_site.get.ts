@@ -1,5 +1,8 @@
 import type { PublicSiteConfig } from '#shared/types/site'
+import { applySiteSlugHeader, siteApiIdentityFromConfig } from '#shared/utils/applySiteSlugHeader'
+import { guessApiSiteHostFromHostname } from '#shared/utils/guessApiSiteHost'
 import { resolveApiBaseUrl } from '#shared/utils/normalizeApiBaseUrl'
+import { normalizePublicSiteConfig } from '#shared/utils/normalizePublicSiteConfig'
 import { getSiteRequestHost } from '#shared/utils/resolveSite'
 import { toPublicSiteConfig } from '#shared/utils/toPublicSiteConfig'
 import { shouldUseMockApi } from '#server/utils/shouldUseMockApi'
@@ -19,22 +22,31 @@ export default defineEventHandler(async (event): Promise<PublicSiteConfig> => {
       const originalHost = getSiteRequestHost(event) || getRequestHeader(event, 'host') || ''
 
       try {
-        // Пробуем контракт /api/_site на upstream (как описано в docs).
-        // Если бэкенд ожидает без /api префикса — можно поменять на '/_site'.
-        const upstream = await $fetch<PublicSiteConfig>('/api/_site', {
-          baseURL,
+        const fetchOptions: { headers?: HeadersInit } = {
           headers: {
             Host: originalHost,
             'X-Forwarded-Host': originalHost,
           },
+        }
+        const site = event.context.site
+        applySiteSlugHeader(
+          fetchOptions,
+          site
+            ? siteApiIdentityFromConfig(site)
+            : guessApiSiteHostFromHostname(originalHost.split(':')[0] ?? ''),
+        )
+
+        const upstream = await $fetch<unknown>('/api/_site', {
+          baseURL,
+          ...fetchOptions,
         })
+        const config = normalizePublicSiteConfig(upstream)
         if (import.meta.dev) {
-          const slug = upstream.slug ?? 'unknown'
           console.log(
-            `[proxy _site] Host=${originalHost} → real backend returned site (slug=${slug})`,
+            `[proxy _site] Host=${originalHost} → real backend returned site (slug=${config.slug})`,
           )
         }
-        return upstream
+        return config
       } catch (err) {
         if (import.meta.dev) {
           console.error('[proxy _site] failed, falling back to local site registry', err)

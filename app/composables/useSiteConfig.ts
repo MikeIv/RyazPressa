@@ -1,5 +1,4 @@
 import type { PublicSiteConfig } from '#shared/types/site'
-import { getSiteConfigFetchParams } from '#shared/utils/siteConfigFetch'
 
 /**
  * Конфиг текущего сайта (по домену запроса). Кэшируется на время сессии.
@@ -7,11 +6,11 @@ import { getSiteConfigFetchParams } from '#shared/utils/siteConfigFetch'
  * Если в runtimeConfig.public.siteConfigApiBase задан адрес (например https://api.ryazpressa.ru),
  * то запрос /api/_site делается абсолютным на этот хост.
  * Браузер в этом случае отправит Host: api.ryazpressa.ru (как просили DevOps).
- * Мы дополнительно отправляем стандартные заголовки X-Forwarded-Host и X-Forwarded-Proto,
- * чтобы бэкенд мог определить реальный контент-домен.
+ * Мы дополнительно отправляем X-Forwarded-Host, X-Forwarded-Proto и X-Site-Slug (apex-домен),
+ * как требует бэкенд на api-хосте.
  */
 export function useSiteConfig() {
-  const { url, options } = getSiteConfigFetchParams(useRuntimeConfig().public)
+  const { url, options } = useSiteConfigFetchParams()
 
   const { data, pending, error, refresh } = useFetch<PublicSiteConfig>(url, options)
 
