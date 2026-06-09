@@ -1,8 +1,5 @@
 import type { PublicSiteConfig } from '#shared/types/site'
-import {
-  buildSiteConfigFetchOptions,
-  resolveSiteConfigRequestUrl,
-} from '#shared/utils/siteConfigFetch'
+import { getSiteConfigFetchParams } from '#shared/utils/siteConfigFetch'
 
 /**
  * Конфиг текущего сайта (по домену запроса). Кэшируется на время сессии.
@@ -14,15 +11,9 @@ import {
  * чтобы бэкенд мог определить реальный контент-домен.
  */
 export function useSiteConfig() {
-  const runtimeConfig = useRuntimeConfig()
-  const siteConfigApiBase = runtimeConfig.public.siteConfigApiBase
+  const { url, options } = getSiteConfigFetchParams(useRuntimeConfig().public)
 
-  const request = computed(() => resolveSiteConfigRequestUrl(siteConfigApiBase))
-
-  const { data, pending, error, refresh } = useFetch<PublicSiteConfig>(
-    request,
-    buildSiteConfigFetchOptions(siteConfigApiBase),
-  )
+  const { data, pending, error, refresh } = useFetch<PublicSiteConfig>(url, options)
 
   const site = computed(() => data.value ?? null)
 
