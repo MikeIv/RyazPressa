@@ -57,6 +57,9 @@ export default defineNuxtConfig({
     /** Mock / proxy только для dev. В чистом статическом Variant 3 не используется. */
     useMockApi: process.env.NUXT_USE_MOCK_API !== 'false',
     public: {
+      /** Slug сайта на localhost — для `X-Site-Slug` при cross-origin `/api/_site`. */
+      siteSlug: process.env.NUXT_SITE_SLUG ?? 'ryazpressa',
+
       // '' / undefined — относительные пути (рекомендуется для Variant 3 co-located static + API).
       // site-specific apiBase (из /api/_site) имеет приоритет, если для сайта API на отдельном origin.
       apiBase: process.env.NUXT_PUBLIC_API_BASE ?? undefined,

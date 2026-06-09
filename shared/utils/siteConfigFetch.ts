@@ -1,5 +1,5 @@
 import { applySiteSlugHeader } from '#shared/utils/applySiteSlugHeader'
-import { guessApiSiteHostFromHostname } from '#shared/utils/guessApiSiteHost'
+import { resolveApiSiteHostForSiteConfig } from '#shared/utils/guessApiSiteHost'
 import { normalizeApiBaseUrl } from '#shared/utils/normalizeApiBaseUrl'
 import { normalizePublicSiteConfig } from '#shared/utils/normalizePublicSiteConfig'
 import type { PublicSiteConfig } from '#shared/types/site'
@@ -19,11 +19,15 @@ export function resolveSiteConfigRequestUrl(siteConfigApiBase: string | undefine
 interface BrowserWindowLike {
   location: {
     host: string
+    hostname: string
     protocol: string
   }
 }
 
-export function applySiteConfigProxyHeaders(options: { headers?: HeadersInit }): void {
+export function applySiteConfigProxyHeaders(
+  options: { headers?: HeadersInit },
+  devSiteSlug?: string,
+): void {
   const browserWindow = (globalThis as typeof globalThis & { window?: BrowserWindowLike }).window
   if (!browserWindow) return
 
@@ -32,7 +36,7 @@ export function applySiteConfigProxyHeaders(options: { headers?: HeadersInit }):
   headers.set('X-Forwarded-Proto', browserWindow.location.protocol.replace(':', ''))
   options.headers = headers
 
-  const apiSiteHost = guessApiSiteHostFromHostname(browserWindow.location.hostname)
+  const apiSiteHost = resolveApiSiteHostForSiteConfig(browserWindow.location.hostname, devSiteSlug)
   applySiteSlugHeader(options, apiSiteHost)
 }
 
@@ -45,6 +49,7 @@ export interface SiteConfigFetchOptions {
 /** Общие опции `useFetch` для `/api/_site` (кэш-ключ + forwarded-заголовки при необходимости). */
 export function buildSiteConfigFetchOptions(
   siteConfigApiBase: string | undefined,
+  devSiteSlug?: string,
 ): SiteConfigFetchOptions {
   const base: SiteConfigFetchOptions = {
     key: 'site-config',
@@ -57,14 +62,17 @@ export function buildSiteConfigFetchOptions(
 
   return {
     ...base,
-    onRequest: ({ options }) => applySiteConfigProxyHeaders(options),
+    onRequest: ({ options }) => applySiteConfigProxyHeaders(options, devSiteSlug),
   }
 }
 
 /** URL и опции `useFetch` для `/api/_site` по значению `siteConfigApiBase`. */
-export function getSiteConfigFetchParams(siteConfigApiBase: string | undefined) {
+export function getSiteConfigFetchParams(
+  siteConfigApiBase: string | undefined,
+  devSiteSlug?: string,
+) {
   return {
     url: resolveSiteConfigRequestUrl(siteConfigApiBase),
-    options: buildSiteConfigFetchOptions(siteConfigApiBase),
+    options: buildSiteConfigFetchOptions(siteConfigApiBase, devSiteSlug),
   }
 }

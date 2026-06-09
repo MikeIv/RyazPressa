@@ -34,14 +34,14 @@ function readTheme(value: unknown): SiteTheme {
   if (!isRecord(value)) {
     throw new Error('Invalid site config response: theme is required')
   }
-  return value as SiteTheme
+  return value as unknown as SiteTheme
 }
 
 function readSections(value: unknown): SiteSections {
   if (!isRecord(value)) {
     throw new Error('Invalid site config response: sections is required')
   }
-  return value as SiteSections
+  return value as unknown as SiteSections
 }
 
 /**

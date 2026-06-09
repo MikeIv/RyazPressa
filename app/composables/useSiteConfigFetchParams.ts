@@ -9,5 +9,10 @@ export function useSiteConfigFetchParams() {
   const siteConfigApiBase =
     'siteConfigApiBase' in publicConfig ? publicConfig.siteConfigApiBase : undefined
 
-  return getSiteConfigFetchParams(readSiteConfigApiBase(siteConfigApiBase))
+  const siteSlug = 'siteSlug' in publicConfig ? publicConfig.siteSlug : undefined
+
+  return getSiteConfigFetchParams(
+    readSiteConfigApiBase(siteConfigApiBase),
+    typeof siteSlug === 'string' ? siteSlug : undefined,
+  )
 }
