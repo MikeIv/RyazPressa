@@ -22,7 +22,7 @@ useHead({ title: 'Округа' })
     <p v-else-if="error" :class="$style.status" role="alert">Не удалось загрузить список округов.</p>
 
     <ul v-else-if="districts.length" :class="$style.list" role="list">
-      <li v-for="district in districts" :key="district.slug">
+      <li v-for="district in districts" :key="district.slug" :class="$style.item">
         <NuxtLink :to="`/okruga/${district.slug}`" :class="$style.link">
           <span :class="$style.name">{{ district.name }}</span>
           <span v-if="district.description" :class="$style.desc">{{ district.description }}</span>
@@ -35,9 +35,11 @@ useHead({ title: 'Округа' })
 </template>
 
 <style module lang="scss">
+@use '~/assets/styles/tools/mixins' as mx;
+
 .page {
+  min-width: 0;
   padding-block: var(--fs-space-4);
-  max-width: 720px;
 }
 
 .title {
@@ -51,23 +53,36 @@ useHead({ title: 'Округа' })
 }
 
 .list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1px;
   list-style: none;
   padding: 0;
   margin: 0;
+  overflow: hidden;
+  background: var(--fs-color-border);
   border: 1px solid var(--fs-color-border);
   border-radius: var(--site-radius-md);
-  overflow: hidden;
+
+  @include mx.from-tablet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mx.from-desktop {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.item {
+  min-width: 0;
+  background: var(--site-color-background);
 }
 
 .link {
   display: block;
+  height: 100%;
   padding: var(--fs-space-2) var(--fs-space-3);
-  border-bottom: 1px solid var(--fs-color-border);
   transition: background 0.15s ease;
-
-  &:last-child {
-    border-bottom: none;
-  }
 
   &:hover {
     background: var(--fs-color-surface);
