@@ -3,6 +3,11 @@ import { mockNewsBySite } from '#shared/mock/news'
 
 export const mockDistricts: District[] = [
   {
+    slug: 'ryazan',
+    name: 'Рязань',
+    description: 'Новости города Рязани',
+  },
+  {
     slug: 'zheleznodorozhny',
     name: 'Железнодорожный',
     description: 'Новости Железнодорожного округа',

@@ -1,4 +1,8 @@
 import {
+  districtDetailSlugFromPath,
+  normalizeDistrictDetailResponse,
+} from '#shared/utils/normalizeDistrictsApi'
+import {
   normalizePostDetailResponse,
   normalizePostsListResponse,
 } from '#shared/utils/normalizePostsApi'
@@ -22,6 +26,11 @@ export function transformClientApiResponse(contractPath: string, raw: unknown): 
 
   if (pathname.startsWith('/api/news/')) {
     return normalizePostDetailResponse(raw)
+  }
+
+  const districtSlug = districtDetailSlugFromPath(pathname)
+  if (districtSlug) {
+    return normalizeDistrictDetailResponse(districtSlug, raw)
   }
 
   return raw

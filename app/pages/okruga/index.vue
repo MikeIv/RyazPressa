@@ -6,7 +6,9 @@ definePageMeta({
   section: 'okruga',
 })
 
-const { data, pending, error } = useApiFetch<ListResponse<District>>('/api/districts')
+const { data, pending, error } = useApiFetch<ListResponse<District>>('/api/districts', {
+  key: 'districts-list',
+})
 const districts = computed(() => data.value?.data ?? [])
 
 useHead({ title: 'Округа' })

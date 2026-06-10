@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DistrictDetail } from '#shared/types/api'
+import type { District, DistrictDetail, ListResponse } from '#shared/types/api'
 
 definePageMeta({
   middleware: 'section',
@@ -9,8 +9,34 @@ definePageMeta({
 const route = useRoute()
 const slug = computed(() => String(route.params.slug))
 
-const { data: district, pending, error } = useApiFetch<DistrictDetail>(
+const { data: districtsList } = useApiFetch<ListResponse<District>>('/api/districts', {
+  key: 'districts-list',
+})
+
+const { data: districtRaw, pending, error } = useApiFetch<DistrictDetail>(
   () => `/api/districts/${slug.value}`,
+  { key: () => `district-detail-${slug.value}` },
+)
+
+const catalogItem = computed(() =>
+  districtsList.value?.data.find((item) => item.slug === slug.value),
+)
+
+const district = computed(() => {
+  if (!districtRaw.value) return null
+
+  const info = catalogItem.value
+  if (!info) return districtRaw.value
+
+  return {
+    ...districtRaw.value,
+    name: info.name,
+    description: info.description ?? districtRaw.value.description,
+  }
+})
+
+const isUnknownDistrict = computed(
+  () => Boolean(districtsList.value && !catalogItem.value && !pending.value && !error.value),
 )
 
 useHead({
@@ -21,7 +47,7 @@ useHead({
 <template>
   <div :class="$style.page">
     <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>
-    <p v-else-if="error" :class="$style.status" role="alert">Округ не найден.</p>
+    <p v-else-if="error || isUnknownDistrict" :class="$style.status" role="alert">Округ не найден.</p>
 
     <template v-else-if="district">
       <header :class="$style.header">
@@ -37,6 +63,7 @@ useHead({
           </li>
         </ul>
       </section>
+      <p v-else :class="$style.status">Новостей пока нет.</p>
 
       <NuxtLink to="/okruga" :class="$style.back">← Все округа</NuxtLink>
     </template>

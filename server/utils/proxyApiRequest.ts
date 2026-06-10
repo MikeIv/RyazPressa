@@ -1,24 +1,10 @@
 import type { H3Event } from 'h3'
 import { FetchError } from 'ofetch'
+import type { NewsItem, PaginatedResponse } from '#shared/types/api'
+import { transformClientApiResponse } from '#shared/utils/clientApiBridge'
 import { filterNewsTodayAndYesterday } from '#shared/utils/groupNewsByDay'
-import {
-  normalizePostDetailResponse,
-  normalizePostsListResponse,
-} from '#shared/utils/normalizePostsApi'
 import { toBackendPath } from '#shared/utils/toBackendPath'
 import { serverApi } from './serverApi'
-
-function normalizeNewsProxyResponse(pathname: string, raw: unknown): unknown {
-  if (pathname === '/api/news') {
-    return normalizePostsListResponse(raw)
-  }
-
-  if (pathname.startsWith('/api/news/')) {
-    return normalizePostDetailResponse(raw)
-  }
-
-  return raw
-}
 
 function backendQuery(event: H3Event): Record<string, unknown> {
   const query: Record<string, unknown> = { ...getQuery(event) }
@@ -43,12 +29,12 @@ export async function proxyApiRequest(event: H3Event): Promise<unknown> {
       query: backendQuery(event),
     })
 
-    let result = normalizeNewsProxyResponse(pathname, raw)
+    let result = transformClientApiResponse(pathname, raw)
 
     if (pathname === '/api/news' && result && typeof result === 'object' && 'data' in result) {
       const query = getQuery(event)
       if (query.period === 'today-yesterday') {
-        const list = result as ReturnType<typeof normalizePostsListResponse>
+        const list = result as PaginatedResponse<NewsItem>
         const data = filterNewsTodayAndYesterday(list.data)
         result = {
           data,
