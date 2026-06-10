@@ -1,12 +1,14 @@
 <script setup lang="ts">
+import { useNewsExcerpt } from '~/composables/useNewsExcerpt'
 import { formatNewsDayMonth, formatNewsTime } from '#shared/utils/formatDate'
 import type { NewsItem } from '#shared/types/api'
 
-defineProps<{
+const props = defineProps<{
   item: NewsItem
 }>()
 
 const { articlePath } = useNewsArticlePath()
+const { excerpt } = useNewsExcerpt(() => props.item)
 </script>
 
 <template>
@@ -24,7 +26,7 @@ const { articlePath } = useNewsArticlePath()
       <div :class="$style.body">
         <p v-if="item.category" :class="$style.category">{{ item.category }}</p>
         <h2 :class="$style.title">{{ item.title }}</h2>
-        <p v-if="item.lead" :class="$style.lead">{{ item.lead }}</p>
+        <p v-if="excerpt" :class="$style.lead">{{ excerpt }}</p>
         <time :class="$style.date" :datetime="item.publishedAt">
           {{ formatNewsDayMonth(item.publishedAt) }}, {{ formatNewsTime(item.publishedAt) }}
         </time>
