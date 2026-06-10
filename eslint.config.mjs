@@ -8,6 +8,7 @@ export default withNuxt(
     ignores: [
       '.nuxt',
       'node_modules',
+      '.pnpm-store',
       '.output',
       'dist',
       '.idea',
