@@ -46,7 +46,10 @@ const { excerpt } = useNewsExcerpt(() => props.item)
   grid-template-columns: minmax(0, 1fr);
   gap: var(--fs-space-2);
   min-width: 0;
+  padding: var(--fs-space-2);
   color: inherit;
+  background: var(--fs-color-surface);
+  border-radius: var(--site-radius-md);
 
   &:focus-visible {
     outline-offset: 4px;
@@ -55,6 +58,7 @@ const { excerpt } = useNewsExcerpt(() => props.item)
   @include mx.from-tablet {
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
     gap: var(--fs-space-3);
+    padding: var(--fs-space-3);
     align-items: stretch;
   }
 }
