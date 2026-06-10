@@ -1,5 +1,6 @@
 import type { SiteConfig } from '#shared/types/site'
 import { EXTENDED_SITE_NAV_ORDER, navFromSections } from '#shared/sites/baseSections'
+import { enrichSiteTheme } from '#shared/utils/siteThemeAssets'
 
 const ryazpressaSections = {
   gallery: false,
@@ -17,7 +18,7 @@ export const ryazpressaSite: SiteConfig = {
   // В Variant 3 (статический деплой) разрешение сайта в рантайме идёт через ответ бэкенда /api/_site,
   // но в dev (Nitro) resolveSite/getSiteByDomain использует этот список (в т.ч. для эмуляции Host).
   domains: ['ryazpressa.ru', 'www.ryazpressa.ru', 'web.ryazpressa.ru', 'www.web.ryazpressa.ru'],
-  theme: {
+  theme: enrichSiteTheme('ryazpressa', 'Рязпресса', {
     colorPrimary: '#1a4b8c',
     colorAccent: '#c62828',
     colorText: '#1a1a1a',
@@ -25,13 +26,7 @@ export const ryazpressaSite: SiteConfig = {
     headerGradientStart: '#ffffff',
     radiusSm: '4px',
     radiusMd: '8px',
-    logoSrc: '/sites/ryazpressa/logo.svg',
-    logoAlt: 'Рязпресса',
-    logoWidth: 300,
-    logoHeight: 28,
-    faviconSrc: '/sites/ryazpressa/favicon.ico',
-    appleTouchIconSrc: '/sites/ryazpressa/apple-touch-icon.png',
-  },
+  }),
   sections: { ...ryazpressaSections },
   nav: navFromSections(ryazpressaSections, EXTENDED_SITE_NAV_ORDER, { homeLabel: 'Новости' }),
   articlePathPrefix: '',

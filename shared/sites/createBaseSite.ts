@@ -10,8 +10,6 @@ export interface SiteManifestEntry {
 }
 
 export function createBaseSiteConfig(entry: SiteManifestEntry): SiteConfig {
-  const logoSrc = `/sites/${entry.slug}/logo.svg`
-
   // apiBase намеренно не указан → undefined.
   // Для базовых изданий это означает "использовать глобальный fallback (NUXT_PUBLIC_API_BASE)".
   // Site-specific override делается в dedicated файле shared/sites/{slug}.ts (пример: ryazpressa.ts),
@@ -20,7 +18,7 @@ export function createBaseSiteConfig(entry: SiteManifestEntry): SiteConfig {
     slug: entry.slug,
     name: entry.name,
     domains: expandSiteDomains(entry.domain),
-    theme: createSiteTheme(entry.slug, entry.name, logoSrc),
+    theme: createSiteTheme(entry.slug, entry.name),
     sections: { ...BASE_SITE_SECTIONS },
     nav: navFromSections(BASE_SITE_SECTIONS),
     articlePathPrefix: '/news',
