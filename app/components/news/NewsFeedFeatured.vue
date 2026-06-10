@@ -2,12 +2,11 @@
 import { formatNewsDayMonth, formatNewsTime } from '#shared/utils/formatDate'
 import type { NewsItem } from '#shared/types/api'
 
-const props = defineProps<{
+defineProps<{
   item: NewsItem
 }>()
 
 const { articlePath } = useNewsArticlePath()
-const { excerpt } = useNewsExcerpt(() => props.item)
 </script>
 
 <template>
@@ -25,7 +24,7 @@ const { excerpt } = useNewsExcerpt(() => props.item)
       <div :class="$style.body">
         <p v-if="item.category" :class="$style.category">{{ item.category }}</p>
         <h2 :class="$style.title">{{ item.title }}</h2>
-        <p v-if="excerpt" :class="$style.lead">{{ excerpt }}</p>
+        <p v-if="item.lead" :class="$style.lead">{{ item.lead }}</p>
         <time :class="$style.date" :datetime="item.publishedAt">
           {{ formatNewsDayMonth(item.publishedAt) }}, {{ formatNewsTime(item.publishedAt) }}
         </time>
