@@ -5,6 +5,7 @@ import type {
   PaginatedMeta,
   PaginatedResponse,
 } from '#shared/types/api'
+import { htmlToPlainText } from '#shared/utils/htmlToPlainText'
 
 interface BackendImageAsset {
   url: string
@@ -50,12 +51,22 @@ function normalizeImage(image: BackendImageAsset | null | undefined): ImageAsset
   return normalized
 }
 
+function resolveLead(raw: BackendPostItem): string {
+  const lead = raw.lead?.trim()
+  if (lead) return lead
+
+  const content = raw.content?.trim()
+  if (content) return htmlToPlainText(content)
+
+  return ''
+}
+
 function normalizeNewsItem(raw: BackendPostItem): NewsItem {
   const item: NewsItem = {
     id: String(raw.id),
     slug: raw.slug,
     title: raw.title,
-    lead: raw.lead?.trim() ?? '',
+    lead: resolveLead(raw),
     publishedAt: raw.publishedAt,
   }
 

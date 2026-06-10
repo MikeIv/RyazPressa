@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { formatDate } from '#shared/utils/formatDate'
+import { formatNewsDayMonth, formatNewsTime } from '#shared/utils/formatDate'
 import type { NewsItem } from '#shared/types/api'
 
-defineProps<{
+const props = defineProps<{
   item: NewsItem
 }>()
 
 const { articlePath } = useNewsArticlePath()
+const { excerpt } = useNewsExcerpt(() => props.item)
 </script>
 
 <template>
@@ -24,8 +25,10 @@ const { articlePath } = useNewsArticlePath()
       <div :class="$style.body">
         <p v-if="item.category" :class="$style.category">{{ item.category }}</p>
         <h2 :class="$style.title">{{ item.title }}</h2>
-        <p v-if="item.lead" :class="$style.lead">{{ item.lead }}</p>
-        <time :class="$style.date" :datetime="item.publishedAt">{{ formatDate(item.publishedAt) }}</time>
+        <p v-if="excerpt" :class="$style.lead">{{ excerpt }}</p>
+        <time :class="$style.date" :datetime="item.publishedAt">
+          {{ formatNewsDayMonth(item.publishedAt) }}, {{ formatNewsTime(item.publishedAt) }}
+        </time>
       </div>
     </NuxtLink>
   </article>
@@ -36,7 +39,6 @@ const { articlePath } = useNewsArticlePath()
 
 .featured {
   min-width: 0;
-  border-bottom: 2px solid var(--fs-color-border);
 }
 
 .link {
@@ -53,7 +55,7 @@ const { articlePath } = useNewsArticlePath()
   @include mx.from-tablet {
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
     gap: var(--fs-space-3);
-    align-items: start;
+    align-items: stretch;
   }
 }
 
@@ -80,7 +82,7 @@ const { articlePath } = useNewsArticlePath()
   flex-direction: column;
   gap: var(--fs-space-1);
   min-width: 0;
-  padding-bottom: var(--fs-space-3);
+  min-height: 100%;
 }
 
 .category {
@@ -104,14 +106,21 @@ const { articlePath } = useNewsArticlePath()
 }
 
 .lead {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
   font-size: var(--fs-text-base);
   line-height: var(--fs-leading-normal);
   color: var(--fs-color-text-muted);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
 }
 
 .date {
-  margin-top: var(--fs-space-1);
+  margin: auto 0 0;
+  padding-top: var(--fs-space-2);
   font-size: var(--fs-text-sm);
   color: var(--fs-color-text-muted);
+  text-transform: capitalize;
 }
 </style>

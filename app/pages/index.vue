@@ -32,7 +32,10 @@ useHead({
       <p v-else-if="!allNews.length" :class="$style.status">Новостей в ленте пока нет.</p>
 
       <div :class="$style.feedColumn">
-        <NewsFeedFeatured v-if="featured" :class="$style.featured" :item="featured" />
+        <div v-if="featured" :class="$style.featuredBlock">
+          <NewsFeedNow />
+          <NewsFeedFeatured :item="featured" />
+        </div>
         <NewsFeedList v-if="feedRest.length" :class="$style.list" :items="feedRest" />
       </div>
       <NewsAsideToday
@@ -99,13 +102,16 @@ useHead({
   font-size: var(--fs-text-base);
 }
 
-.featured,
+.featuredBlock,
 .list,
 .aside {
   min-width: 0;
 }
 
-.featured {
+.featuredBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-space-2);
   grid-area: featured;
 }
 
