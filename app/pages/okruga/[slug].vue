@@ -58,7 +58,7 @@ useHead({
       <section v-if="district.news.length" aria-labelledby="district-news-heading">
         <h2 id="district-news-heading" :class="$style.subtitle">Новости округа</h2>
         <ul :class="$style.newsList" role="list">
-          <li v-for="item in district.news" :key="item.id">
+          <li v-for="item in district.news" :key="item.id" :class="$style.newsItem">
             <NewsCard :item="item" />
           </li>
         </ul>
@@ -71,7 +71,10 @@ useHead({
 </template>
 
 <style module lang="scss">
+@use '~/assets/styles/tools/mixins' as mx;
+
 .page {
+  min-width: 0;
   padding-block: var(--fs-space-4);
 }
 
@@ -101,10 +104,23 @@ useHead({
 
 .newsList {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--fs-space-3);
   list-style: none;
   padding: 0;
   margin: 0;
+
+  @include mx.from-tablet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mx.from-desktop {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.newsItem {
+  min-width: 0;
 }
 
 .back {
