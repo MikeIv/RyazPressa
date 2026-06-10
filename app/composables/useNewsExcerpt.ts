@@ -1,27 +1,26 @@
 import type { Article, NewsItem } from '#shared/types/api'
-import { htmlToPlainText } from '#shared/utils/htmlToPlainText'
 
-/** Анонс новости: `lead` из ленты или plain-text из `content` детальной статьи. */
+/** Анонс новости: `lead` из ленты или из детальной статьи, если лид пустой. */
 export function useNewsExcerpt(item: MaybeRefOrGetter<NewsItem>) {
   const newsItem = computed(() => toValue(item))
+  const lead = computed(() => newsItem.value.lead.trim())
   const detailExcerpt = ref('')
   const api = useApi()
   let requestId = 0
 
   watch(
-    newsItem,
-    async (current) => {
-      const lead = current.lead?.trim()
-      if (lead) {
+    () => [newsItem.value.slug, lead.value] as const,
+    async ([slug, currentLead]) => {
+      if (currentLead) {
         detailExcerpt.value = ''
         return
       }
 
       const id = ++requestId
       try {
-        const article = await api<Article>(`/api/news/${current.slug}`)
+        const article = await api<Article>(`/api/news/${slug}`)
         if (id !== requestId) return
-        detailExcerpt.value = htmlToPlainText(article.content)
+        detailExcerpt.value = article.lead.trim()
       } catch {
         if (id !== requestId) return
         detailExcerpt.value = ''
@@ -30,7 +29,7 @@ export function useNewsExcerpt(item: MaybeRefOrGetter<NewsItem>) {
     { immediate: true },
   )
 
-  const excerpt = computed(() => newsItem.value.lead?.trim() || detailExcerpt.value)
+  const excerpt = computed(() => lead.value || detailExcerpt.value)
 
   return { excerpt }
 }
