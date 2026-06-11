@@ -77,6 +77,8 @@ export interface DocumentItem {
   id: string
   title: string
   fileUrl: string
+  /** Имя файла при скачивании (если отличается от заголовка). */
+  fileName?: string
   fileSize?: number
   publishedAt: IsoDateTime
 }
@@ -119,4 +121,20 @@ export interface ProjectDetail extends Project {
 export interface NearUsSection {
   title: string
   content: string
+}
+
+/** Тариф подписки на газету. */
+export interface Tariff {
+  id: string
+  name: string
+  /** Стоимость в рублях (десятичная строка, например `"500.00"`). */
+  price: string
+  createdAt?: IsoDateTime
+  updatedAt?: IsoDateTime
+}
+
+/** Региональное издание (газета) для подписки. */
+export interface Paper {
+  id: string
+  title: string
 }

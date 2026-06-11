@@ -100,9 +100,13 @@ Query-параметры:
 
 ### Документы
 
+> `sections.documents`
+
 #### `GET /documents`
 
-**Response:** `PaginatedResponse<DocumentItem>`
+**Response:** `PaginatedResponse<DocumentItem>` (бэкенд может отдавать только `{ data }` без `meta` — фронт нормализует)
+
+Поля элемента с бэкенда: `id`, `title`, `fileUrl`, `fileName?`, `fileSize?`, `createdAt` → `publishedAt`.
 
 ---
 
@@ -164,6 +168,22 @@ Query-параметры:
 
 ---
 
+### Подписка на газеты
+
+#### `GET /tariffs`
+
+Список тарифов подписки.
+
+**Response:** `ListResponse<Tariff>`
+
+#### `GET /papers`
+
+Список региональных изданий (газет).
+
+**Response:** `ListResponse<Paper>`
+
+---
+
 ## Сущности (кратко)
 
 | Тип              | Назначение                    |
@@ -178,6 +198,8 @@ Query-параметры:
 | `Project`        | Спецпроект (карточка)         |
 | `ProjectDetail`  | Спецпроект (полная страница)  |
 | `NearUsSection`  | Статичный раздел              |
+| `Tariff`         | Тариф подписки на газету      |
+| `Paper`          | Региональное издание          |
 | `ImageAsset`     | Изображение (`url`, `alt`, …) |
 
 ---
@@ -195,6 +217,8 @@ Query-параметры:
 | `/api/districts` | `server/mock/handlers/districts.ts` |
 | `/api/projects`  | `server/mock/handlers/projects.ts`  |
 | `/api/near-us`   | `server/mock/handlers/near-us.ts`   |
+| `/api/tariffs`   | `server/mock/handlers/tariffs.ts`   |
+| `/api/papers`    | `server/mock/handlers/papers.ts`    |
 
 ### Переключение на реальный бэкенд
 

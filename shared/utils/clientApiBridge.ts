@@ -2,10 +2,15 @@ import {
   districtDetailSlugFromPath,
   normalizeDistrictDetailResponse,
 } from '#shared/utils/normalizeDistrictsApi'
+import { normalizeDocumentsListResponse } from '#shared/utils/normalizeDocumentsApi'
 import {
   normalizePostDetailResponse,
   normalizePostsListResponse,
 } from '#shared/utils/normalizePostsApi'
+import {
+  normalizePapersListResponse,
+  normalizeTariffsListResponse,
+} from '#shared/utils/normalizeSubscriptionApi'
 import { joinApiUrl, normalizeApiBaseUrl } from '#shared/utils/normalizeApiBaseUrl'
 import { toBackendPath } from '#shared/utils/toBackendPath'
 
@@ -31,6 +36,18 @@ export function transformClientApiResponse(contractPath: string, raw: unknown): 
   const districtSlug = districtDetailSlugFromPath(pathname)
   if (districtSlug) {
     return normalizeDistrictDetailResponse(districtSlug, raw)
+  }
+
+  if (pathname === '/api/documents') {
+    return normalizeDocumentsListResponse(raw)
+  }
+
+  if (pathname === '/api/tariffs') {
+    return normalizeTariffsListResponse(raw)
+  }
+
+  if (pathname === '/api/papers') {
+    return normalizePapersListResponse(raw)
   }
 
   return raw
