@@ -98,14 +98,15 @@ pnpm approve-builds --all
 
 Синхронизация из [`_NUXT4_Template`](d:_WEB_Work_NUXT4_Template) или [`Cursor-rules-template`](d:_WEB_Work_Cursor-rules-template) — [`INSTALL-NUXT-VUE.md`](d:_WEB_Work_Cursor-rules-template\INSTALL-NUXT-VUE.md).
 
-| Назначение                   | Путь (локально)                                                           |
-| ---------------------------- | ------------------------------------------------------------------------- |
-| Workflow (GSD + Superpowers) | `.cursor/rules/00-workflow-core.mdc` … `06-fundamental-principles.mdc`    |
-| Verify / code-review         | `.cursor/rules/04-verify-and-done.mdc`, `.cursor/commands/code-review.md` |
-| Контекст проекта             | `.cursor/rules/90-project-context.mdc`                                    |
-| Nuxt / Vue / SCSS / API      | `.cursor/rules/nuxt-template.mdc`                                         |
-| Планирование                 | `.planning/PROJECT.md`                                                    |
-| Справка                      | `AGENTS.md`                                                               |
+| Назначение              | Путь (локально)                                                           |
+| ----------------------- | ------------------------------------------------------------------------- |
+| Workflow (GSD)          | `.cursor/rules/00-workflow-core.mdc` … `07-token-economy.mdc`             |
+| Verify / code-review    | `.cursor/rules/04-verify-and-done.mdc`, `.cursor/commands/code-review.md` |
+| Контекст проекта        | `.cursor/rules/90-project-context.mdc`                                    |
+| Nuxt / Vue / SCSS / API | `.cursor/rules/nuxt-template.mdc` (globs: `app/`, `server/`, `shared/`)   |
+| Slash-команды           | `.cursor/commands/` — `/brief`, `/wave-done`, `/verify`, `/code-review`   |
+| Планирование            | `.planning/PROJECT.md`, `brief-template.md`, `state-template.md`          |
+| Справка                 | `AGENTS.md`                                                               |
 
 ### MCP (локально, опционально)
 
