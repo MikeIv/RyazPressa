@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ContactInfo } from '#shared/types/api'
-import { contactInfoHasContent } from '#shared/utils/normalizeContactsApi'
+import { contactInfoHasContent, contactTelHref } from '#shared/utils/normalizeContactsApi'
 
 definePageMeta({
   middleware: 'section',
@@ -15,10 +15,6 @@ const hasContent = computed(() => contactInfoHasContent(contacts.value))
 const orgTitle = computed(
   () => contacts.value?.title?.trim() || site.value?.name?.trim() || 'Редакция',
 )
-
-function telHref(phone: string): string {
-  return `tel:${phone.replace(/[^\d+]/g, '')}`
-}
 
 useHead({ title: 'Контакты' })
 </script>
@@ -62,10 +58,7 @@ useHead({ title: 'Контакты' })
         </dl>
       </section>
 
-      <div
-        v-if="contacts.phones?.length || contacts.emails?.length"
-        :class="$style.sideGrid"
-      >
+      <div v-if="contacts.phones?.length || contacts.emails?.length" :class="$style.sideGrid">
         <section
           v-if="contacts.phones?.length"
           :class="$style.sideCard"
@@ -74,7 +67,9 @@ useHead({ title: 'Контакты' })
           <h2 id="contacts-phones-heading" :class="$style.sideTitle">Телефоны</h2>
           <ul :class="$style.entryList" role="list">
             <li v-for="phone in contacts.phones" :key="phone.number" :class="$style.entry">
-              <a :href="telHref(phone.number)" :class="$style.entryLink">{{ phone.number }}</a>
+              <a :href="contactTelHref(phone.number)" :class="$style.entryLink">{{
+                phone.number
+              }}</a>
               <span v-if="phone.label" :class="$style.entryLabel">{{ phone.label }}</span>
             </li>
           </ul>

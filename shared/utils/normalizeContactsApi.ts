@@ -130,3 +130,13 @@ export function contactInfoHasContent(contacts: ContactInfo | null | undefined):
     contacts.mapEmbedUrl,
   )
 }
+
+export function contactInfoHasFooterContent(contacts: ContactInfo | null | undefined): boolean {
+  if (!contacts) return false
+
+  return Boolean(contacts.address || contacts.phones?.length || contacts.emails?.length)
+}
+
+export function contactTelHref(phone: string): string {
+  return `tel:${phone.replace(/[^\d+]/g, '')}`
+}
