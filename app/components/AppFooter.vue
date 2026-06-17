@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useFooterContacts } from '~/composables/useFooterContacts'
 import { contactTelHref } from '#shared/utils/normalizeContactsApi'
 
 const { site } = useSiteConfig()
