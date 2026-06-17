@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { formatDate } from '#shared/utils/formatDate'
-import type { ProjectDetail } from '#shared/types/api'
+import type { Article } from '#shared/types/api'
 
 definePageMeta({
   middleware: 'section',
@@ -10,12 +10,10 @@ definePageMeta({
 const route = useRoute()
 const slug = computed(() => String(route.params.slug))
 
-const { data: project, pending, error } = useApiFetch<ProjectDetail>(
-  () => `/api/projects/${slug.value}`,
-)
+const { data: article, pending, error } = useApiFetch<Article>(() => `/api/news/${slug.value}`)
 
 useHead({
-  title: () => project.value?.title ?? 'Проект',
+  title: () => article.value?.title ?? 'Проект',
 })
 </script>
 
@@ -24,26 +22,26 @@ useHead({
     <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>
     <p v-else-if="error" :class="$style.status" role="alert">Проект не найден.</p>
 
-    <template v-else-if="project">
+    <template v-else-if="article">
       <header :class="$style.header">
-        <h1 :class="$style.title">{{ project.title }}</h1>
+        <h1 :class="$style.title">{{ article.title }}</h1>
         <p :class="$style.meta">
-          <time :datetime="project.publishedAt">{{ formatDate(project.publishedAt) }}</time>
+          <time :datetime="article.publishedAt">{{ formatDate(article.publishedAt) }}</time>
         </p>
-        <p :class="$style.lead">{{ project.lead }}</p>
+        <p :class="$style.lead">{{ article.lead }}</p>
       </header>
 
       <img
-        v-if="project.image"
-        :src="project.image.url"
-        :alt="project.image.alt"
+        v-if="article.image"
+        :src="article.image.url"
+        :alt="article.image.alt"
         :class="$style.image"
         width="800"
         height="450"
       />
 
       <!-- eslint-disable-next-line vue/no-v-html -- HTML из CMS/API -->
-      <div :class="$style.content" v-html="project.content" />
+      <div :class="$style.content" v-html="article.content" />
 
       <NuxtLink to="/projects" :class="$style.back">← Все проекты</NuxtLink>
     </template>

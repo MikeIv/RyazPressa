@@ -5,6 +5,16 @@ import { contactTelHref } from '#shared/utils/normalizeContactsApi'
 const { site } = useSiteConfig()
 const { contacts, showContacts } = useFooterContacts()
 const year = new Date().getFullYear()
+
+const footerMetaLines = computed(() => {
+  const c = contacts.value
+  if (!c) return []
+
+  const lines: { label: string; value: string }[] = []
+  if (c.chief) lines.push({ label: 'Главный редактор', value: c.chief })
+  if (c.ageRating) lines.push({ label: 'Возрастная маркировка', value: c.ageRating })
+  return lines
+})
 </script>
 
 <template>
@@ -27,6 +37,10 @@ const year = new Date().getFullYear()
                 email.address
               }}</a>
             </template>
+          </p>
+          <p v-for="line in footerMetaLines" :key="line.label" :class="$style.contactsText">
+            <span :class="$style.contactsLabel">{{ line.label }}</span>
+            {{ line.value }}
           </p>
           <p v-if="contacts.address" :class="$style.contactsText">{{ contacts.address }}</p>
         </div>
@@ -93,6 +107,12 @@ const year = new Date().getFullYear()
   font-size: var(--fs-text-xs);
   line-height: 1.4;
   color: var(--fs-color-text-muted);
+}
+
+.contactsLabel {
+  margin-right: 0.35em;
+  font-weight: var(--fs-weight-medium);
+  color: var(--fs-color-text);
 }
 
 .sep {

@@ -154,7 +154,7 @@ Query-параметры:
 
 #### `GET /projects/{slug}`
 
-**Response:** `ProjectDetail`
+> Детальная страница проекта — та же сущность, что и статья: **`GET /news/{slug}`** (`Article`). Список остаётся на `GET /projects`.
 
 ---
 

@@ -1,4 +1,5 @@
 import type { H3Event } from 'h3'
+import { getMockProjectDetail } from '#shared/mock/projects'
 import { getNewsForSite, getArticlesForSite } from '#shared/mock/siteMockAccess'
 import { filterNewsTodayAndYesterday } from '#shared/utils/groupNewsByDay'
 import { paginate } from '#shared/utils/paginate'
@@ -30,10 +31,14 @@ export function mockNewsBySlug(event: H3Event) {
   const siteSlug = event.context.site.slug
   const articles = getArticlesForSite(siteSlug)
   const article = articles.find((a) => a.slug === slug)
-
-  if (!article) {
-    throw createError({ statusCode: 404, statusMessage: 'Article not found' })
+  if (article) {
+    return article
   }
 
-  return article
+  const project = getMockProjectDetail(slug)
+  if (project) {
+    return { id: project.slug, ...project }
+  }
+
+  throw createError({ statusCode: 404, statusMessage: 'Article not found' })
 }

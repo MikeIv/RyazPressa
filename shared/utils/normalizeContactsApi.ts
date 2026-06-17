@@ -134,7 +134,13 @@ export function contactInfoHasContent(contacts: ContactInfo | null | undefined):
 export function contactInfoHasFooterContent(contacts: ContactInfo | null | undefined): boolean {
   if (!contacts) return false
 
-  return Boolean(contacts.address || contacts.phones?.length || contacts.emails?.length)
+  return Boolean(
+    contacts.address ||
+    contacts.chief ||
+    contacts.ageRating ||
+    contacts.phones?.length ||
+    contacts.emails?.length,
+  )
 }
 
 export function contactTelHref(phone: string): string {
