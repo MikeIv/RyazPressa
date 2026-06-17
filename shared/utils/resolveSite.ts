@@ -14,6 +14,11 @@ export function isLocalDevHost(host: string): boolean {
   return LOCAL_HOSTS.has(parseHostname(host))
 }
 
+/** Vercel preview/production на *.vercel.app — тот же fallback по `NUXT_SITE_SLUG`. */
+export function isPreviewDeployHost(host: string): boolean {
+  return parseHostname(host).endsWith('.vercel.app')
+}
+
 /** Host из запроса: `X-Forwarded-Host` (прокси) или `Host`. */
 export function getSiteRequestHost(event: H3Event): string {
   const forwarded = getRequestHeader(event, 'x-forwarded-host')

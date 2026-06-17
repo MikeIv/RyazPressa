@@ -1,6 +1,6 @@
 import { getSiteBySlug } from '#shared/sites'
 import { getPrimarySiteDomain } from '#shared/utils/getPrimarySiteDomain'
-import { isLocalDevHost } from '#shared/utils/resolveSite'
+import { isLocalDevHost, isPreviewDeployHost } from '#shared/utils/resolveSite'
 
 /** Убирает `www.` / `web.` — для `X-Site-Slug` до первого `/api/_site` (бэкенд ждёт apex-домен). */
 export function guessApiSiteHostFromHostname(hostname: string): string {
@@ -15,7 +15,7 @@ export function guessApiSiteHostFromHostname(hostname: string): string {
  * На localhost — из реестра по `NUXT_SITE_SLUG`, иначе — нормализация hostname.
  */
 export function resolveApiSiteHostForSiteConfig(hostname: string, devSiteSlug?: string): string {
-  if (isLocalDevHost(hostname) && devSiteSlug?.trim()) {
+  if ((isLocalDevHost(hostname) || isPreviewDeployHost(hostname)) && devSiteSlug?.trim()) {
     const site = getSiteBySlug(devSiteSlug.trim())
     if (site) {
       return getPrimarySiteDomain(site.domains) ?? site.slug

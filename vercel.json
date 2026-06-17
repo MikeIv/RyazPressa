@@ -1,0 +1,18 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm generate",
+  "devCommand": "pnpm dev",
+  "installCommand": "pnpm install",
+  "outputDirectory": ".output/public",
+  "framework": null,
+  "env": {
+    "NUXT_PUBLIC_API_BASE": "https://api.ryazpressa.ru",
+    "NUXT_SITE_SLUG": "ryazpressa"
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
