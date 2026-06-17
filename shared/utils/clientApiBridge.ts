@@ -2,6 +2,7 @@ import {
   districtDetailSlugFromPath,
   normalizeDistrictDetailResponse,
 } from '#shared/utils/normalizeDistrictsApi'
+import { normalizeContactsResponse } from '#shared/utils/normalizeContactsApi'
 import { normalizeDocumentsListResponse } from '#shared/utils/normalizeDocumentsApi'
 import {
   normalizePostDetailResponse,
@@ -40,6 +41,10 @@ export function transformClientApiResponse(contractPath: string, raw: unknown): 
 
   if (pathname === '/api/documents') {
     return normalizeDocumentsListResponse(raw)
+  }
+
+  if (pathname === '/api/contacts') {
+    return normalizeContactsResponse(raw)
   }
 
   if (pathname === '/api/tariffs') {

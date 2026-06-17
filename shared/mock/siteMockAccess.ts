@@ -1,4 +1,4 @@
-import type { Article, ContactInfo, DocumentItem, GalleryItem, NewsItem } from '#shared/types/api'
+import type { Article, DocumentItem, GalleryItem, NewsItem } from '#shared/types/api'
 import { mockArticlesBySite, mockNewsBySite } from '#shared/mock/news'
 import { mockContactsBySite } from '#shared/mock/contacts'
 import { mockDocumentsBySite } from '#shared/mock/documents'
@@ -23,7 +23,7 @@ export function getArticlesForSite(slug: string): Article[] {
   }))
 }
 
-export function getContactsForSite(slug: string): ContactInfo | undefined {
+export function getContactsForSite(slug: string) {
   return mockContactsBySite[slug] ?? mockContactsBySite[BASE_SITE_MOCK_SLUG]
 }
 

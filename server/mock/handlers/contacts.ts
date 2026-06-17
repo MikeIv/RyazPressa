@@ -1,5 +1,6 @@
 import type { H3Event } from 'h3'
 import { getContactsForSite } from '#shared/mock/siteMockAccess'
+import { normalizeContactsResponse } from '#shared/utils/normalizeContactsApi'
 
 export function mockContactsIndex(event: H3Event) {
   const slug = event.context.site.slug
@@ -9,5 +10,5 @@ export function mockContactsIndex(event: H3Event) {
     throw createError({ statusCode: 404, statusMessage: 'Contacts not found' })
   }
 
-  return contacts
+  return normalizeContactsResponse(contacts)
 }

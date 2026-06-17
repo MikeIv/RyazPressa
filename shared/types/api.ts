@@ -83,11 +83,29 @@ export interface DocumentItem {
   publishedAt: IsoDateTime
 }
 
+export interface ContactPhoneEntry {
+  number: string
+  label?: string
+}
+
+export interface ContactEmailEntry {
+  address: string
+  label?: string
+}
+
 /** Контакты редакции. */
 export interface ContactInfo {
-  title: string
+  title?: string
+  chief?: string
   address?: string
+  coords?: string
+  ageRating?: string
+  rknRegistration?: string
+  phones?: ContactPhoneEntry[]
+  emails?: ContactEmailEntry[]
+  /** Legacy mock: одна строка — нормализатор приводит к `phones`. */
   phone?: string
+  /** Legacy mock: одна строка — нормализатор приводит к `emails`. */
   email?: string
   workingHours?: string
   mapEmbedUrl?: string
