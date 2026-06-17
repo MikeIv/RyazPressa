@@ -85,7 +85,16 @@ export default defineNuxtConfig({
 
   nitro: {
     compressPublicAssets: true,
-    // В Variant 3 статического SPA (без Nitro в рантайме) для продакшена используется только
-    // сгенерированная статика (public assets после generate/build). Серверная часть Nitro не запускается.
+    routeRules: {
+      '/api/**': {
+        cors: true,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Site-Slug, *',
+          'Access-Control-Max-Age': '7200',
+        },
+      },
+    },
   },
 })
