@@ -8,6 +8,7 @@ export const SECTION_ROUTE_MAP: Readonly<Record<string, keyof SiteSections>> = {
   '/okruga': 'okruga',
   '/ryadom-s-nami': 'ryadomSNami',
   '/projects': 'projects',
+  '/price': 'price',
 }
 
 export function validateSiteNav(site: SiteConfig): string[] {

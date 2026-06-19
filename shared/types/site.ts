@@ -30,6 +30,8 @@ export interface SiteSections {
   okruga: boolean
   ryadomSNami: boolean
   projects: boolean
+  /** Подписка на электронные газеты (`/price`). */
+  price: boolean
 }
 
 export interface SiteNavItem {

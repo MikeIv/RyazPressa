@@ -8,6 +8,7 @@ export const BASE_SITE_SECTIONS: SiteSections = {
   okruga: false,
   ryadomSNami: false,
   projects: false,
+  price: false,
 }
 
 const SECTION_NAV: Partial<Record<keyof SiteSections, SiteNavItem>> = {
@@ -17,6 +18,7 @@ const SECTION_NAV: Partial<Record<keyof SiteSections, SiteNavItem>> = {
   okruga: { label: 'Округа', to: '/okruga' },
   ryadomSNami: { label: 'Рядом с нами', to: '/ryadom-s-nami' },
   projects: { label: 'Проекты', to: '/projects' },
+  price: { label: 'Подписаться', to: '/price' },
 }
 
 const NAV_ORDER: (keyof SiteSections)[] = [
@@ -26,6 +28,7 @@ const NAV_ORDER: (keyof SiteSections)[] = [
   'okruga',
   'ryadomSNami',
   'projects',
+  'price',
 ]
 
 /** Порядок nav для расширенного сайта (ryazpressa). */
@@ -35,6 +38,7 @@ export const EXTENDED_SITE_NAV_ORDER: (keyof SiteSections)[] = [
   'projects',
   'contacts',
   'documents',
+  'price',
 ]
 
 /** Навигация из включённых разделов (главная/новости всегда первая). */

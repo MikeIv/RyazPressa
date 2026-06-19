@@ -9,6 +9,7 @@ const ryazpressaSections = {
   okruga: true,
   ryadomSNami: true,
   projects: true,
+  price: true,
 } as const
 
 export const ryazpressaSite: SiteConfig = {

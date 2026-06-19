@@ -56,6 +56,7 @@ const _extendedSections = {
   okruga: true,
   ryadomSNami: true,
   projects: true,
+  price: false,
 } as const
 
 const _extendedSiteExample: SiteConfig = {
