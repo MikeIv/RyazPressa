@@ -1,4 +1,5 @@
 import type { Article, ImageAsset, NewsItem } from '#shared/types/api'
+import { RYADOM_S_NAMI_SEGMENT } from '#shared/utils/newsArticlePath'
 
 function mockNewsImage(file: string, alt: string): ImageAsset {
   return {
@@ -82,6 +83,24 @@ export const mockNewsBySite: Record<string, NewsItem[]> = {
       image: mockNewsImage('education.svg', 'Медицина — иллюстрация к новости'),
       category: 'Здоровье',
       publishedAt: '2026-05-17T12:00:00+03:00',
+    },
+    {
+      id: '9',
+      slug: 'volonterskaya-akciya-ryazan',
+      title: 'Волонтёры провели субботник у редакции',
+      lead: 'Участники акции привели в порядок прилегающую территорию и высадили кустарники.',
+      image: mockNewsImage('city.svg', 'Волонтёрская акция — иллюстрация к материалу'),
+      category: RYADOM_S_NAMI_SEGMENT,
+      publishedAt: '2026-05-16T10:00:00+03:00',
+    },
+    {
+      id: '10',
+      slug: 'sosedskii-festival',
+      title: 'Соседский фестиваль собрал жителей микрорайона',
+      lead: 'На площадке рядом с редакцией прошли мастер-классы, концерт и ярмарка.',
+      image: mockNewsImage('culture.svg', 'Соседский фестиваль — иллюстрация к материалу'),
+      category: RYADOM_S_NAMI_SEGMENT,
+      publishedAt: '2026-05-15T15:30:00+03:00',
     },
   ],
   nesecretno: [

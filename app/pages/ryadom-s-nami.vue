@@ -1,53 +1,74 @@
 <script setup lang="ts">
-import type { NearUsSection } from '#shared/types/api'
+import type { NewsItem, PaginatedResponse } from '#shared/types/api'
+import { RYADOM_S_NAMI_SEGMENT } from '#shared/utils/newsArticlePath'
 
 definePageMeta({
   middleware: 'section',
   section: 'ryadomSNami',
 })
 
-const { data: section, pending, error } = useApiFetch<NearUsSection>('/api/near-us')
-
-useHead({
-  title: () => section.value?.title ?? 'Рядом с нами',
+const { data, pending, error } = useApiFetch<PaginatedResponse<NewsItem>>('/api/news', {
+  query: { category: RYADOM_S_NAMI_SEGMENT, perPage: 24 },
+  key: 'ryadom-s-nami-news',
 })
+
+const articles = computed(() => data.value?.data ?? [])
+
+useHead({ title: 'Рядом с нами' })
 </script>
 
 <template>
   <div :class="$style.page">
-    <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>
-    <p v-else-if="error" :class="$style.status" role="alert">Не удалось загрузить раздел.</p>
+    <h1 :class="$style.title">Рядом с нами</h1>
 
-    <article v-else-if="section">
-      <h1 :class="$style.title">{{ section.title }}</h1>
-      <!-- eslint-disable-next-line vue/no-v-html -- HTML из CMS/API -->
-      <div :class="$style.content" v-html="section.content" />
-    </article>
+    <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>
+    <p v-else-if="error" :class="$style.status" role="alert">Не удалось загрузить материалы.</p>
+
+    <ul v-else-if="articles.length" :class="$style.list" role="list">
+      <li v-for="item in articles" :key="item.id">
+        <NewsCard :item="item" />
+      </li>
+    </ul>
+
+    <p v-else :class="$style.status">Материалов в разделе пока нет.</p>
   </div>
 </template>
 
 <style module lang="scss">
+@use '~/assets/styles/tools/mixins' as mx;
+
 .page {
   padding-block: var(--fs-space-4);
-  max-width: 720px;
+}
+
+.title {
+  font-size: var(--fs-text-3xl);
+  font-weight: var(--fs-weight-bold);
+  margin-bottom: var(--fs-space-4);
 }
 
 .status {
   color: var(--fs-color-text-muted);
 }
 
-.title {
-  font-size: var(--fs-text-3xl);
-  font-weight: var(--fs-weight-bold);
-  margin-bottom: var(--fs-space-3);
-}
+.list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--fs-space-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
 
-.content {
-  font-size: var(--fs-text-base);
-  line-height: var(--fs-leading-relaxed);
+  @include mx.from-tablet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
-  :global(p) {
-    margin-bottom: var(--fs-space-2);
+  @include mx.from-desktop {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  > li {
+    min-width: 0;
   }
 }
 </style>

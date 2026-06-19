@@ -1,13 +1,16 @@
 /** Префикс URL статьи: `''` — корень (`/slug`), `'/news'` — `/news/slug`. */
 export type NewsArticlePathPrefix = '' | '/news'
 
+/** Slug раздела «Рядом с нами» в URL и query `category` API `/api/posts`. */
+export const RYADOM_S_NAMI_SEGMENT = 'ryadom-s-nami' as const
+
 export const RESERVED_ROOT_SEGMENTS = new Set([
   'gallery',
   'documents',
   'contacts',
   'okruga',
   'projects',
-  'ryadom-s-nami',
+  RYADOM_S_NAMI_SEGMENT,
   'news',
   'price',
 ])
