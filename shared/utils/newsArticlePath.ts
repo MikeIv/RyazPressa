@@ -9,6 +9,7 @@ export const RESERVED_ROOT_SEGMENTS = new Set([
   'projects',
   'ryadom-s-nami',
   'news',
+  'price',
 ])
 
 export function newsArticlePath(prefix: NewsArticlePathPrefix, slug: string): string {

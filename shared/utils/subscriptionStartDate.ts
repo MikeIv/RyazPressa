@@ -9,3 +9,10 @@ export function nextSubscriptionStartIsoDate(reference = new Date()): string {
 
   return `${year + 1}-01-01`
 }
+
+/** `YYYY-MM-DD` → `DD.MM.YYYY` для API подписки. */
+export function formatIsoDateRu(isoDate: string): string {
+  const [year, month, day] = isoDate.split('-')
+  if (!year || !month || !day) return isoDate
+  return `${day}.${month}.${year}`
+}

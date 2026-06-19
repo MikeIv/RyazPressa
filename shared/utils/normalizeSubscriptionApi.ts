@@ -1,4 +1,11 @@
-import type { ListResponse, Paper, Tariff } from '#shared/types/api'
+import type {
+  ListResponse,
+  Paper,
+  PaperOrderRequest,
+  PaperOrderResponse,
+  Tariff,
+} from '#shared/types/api'
+import { formatIsoDateRu } from '#shared/utils/subscriptionStartDate'
 
 interface BackendTariffItem {
   id: string | number
@@ -68,4 +75,57 @@ export function normalizePapersListResponse(raw: unknown): ListResponse<Paper> {
     : []
 
   return { data }
+}
+
+export function buildPaperOrderRequest(params: {
+  email: string
+  tariffId: string
+  startDateIso: string
+  paperIds: string[]
+}): PaperOrderRequest {
+  return {
+    email: params.email.trim(),
+    type: params.tariffId,
+    dt: formatIsoDateRu(params.startDateIso),
+    paper: params.paperIds,
+  }
+}
+
+function readPaperIds(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return []
+
+  return raw.map((item) => (item == null ? '' : String(item))).filter((item) => item.length > 0)
+}
+
+/** Ответ оформления подписки (legacy `/ajax_paper_order.php`, будущий `/api/paper-orders`). */
+export function normalizePaperOrderResponse(raw: unknown): PaperOrderResponse {
+  if (!raw || typeof raw !== 'object') {
+    throw new Error('Invalid API response')
+  }
+
+  const body = raw as Record<string, unknown>
+  const orderId = body.orderId ?? body.order_id
+  const formUrl = body.formUrl ?? body.form_url
+  const error = body.error
+
+  return {
+    success: Boolean(body.success),
+    orderId: orderId == null ? '' : String(orderId),
+    error: typeof error === 'string' && error.trim() ? error : undefined,
+    formUrl: typeof formUrl === 'string' && formUrl.trim() ? formUrl : undefined,
+  }
+}
+
+export function parsePaperOrderRequestBody(raw: unknown): PaperOrderRequest | null {
+  if (!raw || typeof raw !== 'object') return null
+
+  const body = raw as Record<string, unknown>
+  const email = typeof body.email === 'string' ? body.email.trim() : ''
+  const type = body.type == null ? '' : String(body.type)
+  const dt = typeof body.dt === 'string' ? body.dt.trim() : ''
+  const paper = readPaperIds(body.paper ?? body['paper[]'])
+
+  if (!email || !type || !dt || !paper.length) return null
+
+  return { email, type, dt, paper }
 }

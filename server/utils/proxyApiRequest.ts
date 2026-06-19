@@ -12,6 +12,13 @@ function backendQuery(event: H3Event): Record<string, unknown> {
   return query
 }
 
+async function backendBody(
+  event: H3Event,
+): Promise<BodyInit | Record<string, unknown> | undefined> {
+  if (event.method === 'GET' || event.method === 'HEAD') return undefined
+  return readBody(event)
+}
+
 export async function proxyApiRequest(event: H3Event): Promise<unknown> {
   const { pathname } = getRequestURL(event)
   const api = serverApi(event)
@@ -27,6 +34,7 @@ export async function proxyApiRequest(event: H3Event): Promise<unknown> {
     const raw = await api(toBackendPath(pathname), {
       method: event.method,
       query: backendQuery(event),
+      body: await backendBody(event),
     })
 
     let result = transformClientApiResponse(pathname, raw)

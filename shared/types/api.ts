@@ -156,3 +156,23 @@ export interface Paper {
   id: string
   title: string
 }
+
+/** Тело заказа подписки (legacy `type`/`dt`/`paper[]`, будущий `POST /api/paper-orders`). */
+export interface PaperOrderRequest {
+  email: string
+  /** ID тарифа. */
+  type: string
+  /** Дата начала в формате `DD.MM.YYYY`. */
+  dt: string
+  /** ID выбранных изданий. */
+  paper: string[]
+}
+
+/** Ответ оформления подписки (редирект на оплату или успех без оплаты). */
+export interface PaperOrderResponse {
+  success: boolean
+  orderId: string
+  error?: string
+  /** URL платёжного шлюза (Сбербанк). */
+  formUrl?: string
+}

@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import type { ListResponse, Paper, Tariff } from '#shared/types/api'
+import { buildPaperOrderRequest } from '#shared/utils/normalizeSubscriptionApi'
 import { nextSubscriptionStartIsoDate } from '#shared/utils/subscriptionStartDate'
+import {
+  readPaperOrderSubmitError,
+  resolvePaperOrderOutcome,
+  submitLegacyPaperOrder,
+} from '#shared/utils/submitLegacyPaperOrder'
 
 definePageMeta({
   middleware: 'section',
@@ -108,6 +114,7 @@ const startDate = ref(nextSubscriptionStartIsoDate())
 const consent = ref(false)
 const formError = ref('')
 const formNotice = ref('')
+const submitting = ref(false)
 
 watch(
   tariffs,
@@ -132,7 +139,7 @@ function validateForm(): string | null {
   return null
 }
 
-function onSubmit(event: Event): void {
+async function onSubmit(event: Event): Promise<void> {
   event.preventDefault()
   formNotice.value = ''
 
@@ -143,7 +150,34 @@ function onSubmit(event: Event): void {
   }
 
   formError.value = ''
-  formNotice.value = 'Оформление подписки и оплата будут подключены на следующем этапе.'
+  submitting.value = true
+
+  try {
+    const order = buildPaperOrderRequest({
+      email: email.value,
+      tariffId: selectedTariffId.value,
+      startDateIso: startDate.value,
+      paperIds: selectedPaperIds.value,
+    })
+
+    const outcome = resolvePaperOrderOutcome(order, await submitLegacyPaperOrder(order))
+
+    if (outcome.kind === 'redirect') {
+      window.location.assign(outcome.url)
+      return
+    }
+
+    if (outcome.kind === 'success') {
+      formNotice.value = outcome.message
+      return
+    }
+
+    formError.value = outcome.message
+  } catch (submitError) {
+    formError.value = readPaperOrderSubmitError(submitError)
+  } finally {
+    submitting.value = false
+  }
 }
 
 useHead({ title: 'Прайс лист' })
@@ -239,7 +273,9 @@ useHead({ title: 'Прайс лист' })
           <p v-if="formError" :class="$style.formError" role="alert">{{ formError }}</p>
           <p v-if="formNotice" :class="$style.formNotice" role="status">{{ formNotice }}</p>
 
-          <button :class="$style.submitBtn" type="submit">Оформить подписку</button>
+          <button :class="$style.submitBtn" type="submit" :disabled="submitting">
+            {{ submitting ? 'Оформление…' : 'Оформить подписку' }}
+          </button>
         </form>
       </section>
 
@@ -490,6 +526,11 @@ useHead({ title: 'Прайс лист' })
   &:focus-visible {
     outline: 2px solid var(--site-color-primary);
     outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
   }
 }
 

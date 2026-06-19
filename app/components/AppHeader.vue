@@ -99,6 +99,8 @@ watch(
             <li v-for="item in site?.nav" :key="item.to">
               <NuxtLink
                 :to="item.to"
+                active-class=""
+                exact-active-class=""
                 :class="[$style.navLink, isActive(item.to) && $style.navLinkActive]"
               >
                 {{ item.label }}
@@ -363,12 +365,13 @@ watch(
   font-weight: var(--fs-weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--site-color-primary);
+  color: color-mix(in srgb, var(--site-color-primary) 52%, var(--fs-color-text-muted));
+  text-decoration: none;
   white-space: nowrap;
-  transition: opacity 0.15s ease;
+  transition: color 0.15s ease;
 
   &:hover {
-    opacity: 0.75;
+    color: color-mix(in srgb, var(--site-color-primary) 78%, var(--fs-color-text-muted));
   }
 
   &:focus-visible {
@@ -381,9 +384,14 @@ watch(
 }
 
 .navLinkActive {
-  opacity: 1;
+  color: var(--site-color-primary);
+  font-weight: var(--fs-weight-bold);
   text-decoration: underline;
   text-underline-offset: 4px;
   text-decoration-thickness: 2px;
+
+  &:hover {
+    color: var(--site-color-primary);
+  }
 }
 </style>

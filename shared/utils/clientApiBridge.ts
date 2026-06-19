@@ -9,6 +9,7 @@ import {
   normalizePostsListResponse,
 } from '#shared/utils/normalizePostsApi'
 import {
+  normalizePaperOrderResponse,
   normalizePapersListResponse,
   normalizeTariffsListResponse,
 } from '#shared/utils/normalizeSubscriptionApi'
@@ -53,6 +54,10 @@ export function transformClientApiResponse(contractPath: string, raw: unknown): 
 
   if (pathname === '/api/papers') {
     return normalizePapersListResponse(raw)
+  }
+
+  if (pathname === '/api/paper-orders') {
+    return normalizePaperOrderResponse(raw)
   }
 
   return raw
