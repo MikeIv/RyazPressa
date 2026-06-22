@@ -28,6 +28,8 @@ const { isOpen: isFooterOpen, close: closeFooter } = useFooterPanel()
     >
       <AppFooter />
     </div>
+
+    <AppFontSizeControl />
   </div>
 </template>
 

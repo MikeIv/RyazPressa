@@ -2,20 +2,16 @@
 
 html {
   min-height: 100dvh;
+  font-size: var(--fs-root-font-size, #{size.$base-font-size});
 }
 
-html,
 body {
   margin: 0;
-  font-size: size.$base-font-size;
+  min-height: 100dvh;
   font-family: var(--fs-font-sans);
   color: var(--fs-color-text);
   background-color: var(--fs-color-bg);
   line-height: var(--fs-leading-normal);
-}
-
-body {
-  min-height: 100dvh;
 }
 
 *,
