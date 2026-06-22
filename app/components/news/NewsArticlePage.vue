@@ -36,7 +36,7 @@ useHead({
         height="450"
       />
 
-      <!-- eslint-disable-next-line vue/no-v-html -- HTML приходит из CMS/API бэкенда -->
+      <!-- eslint-disable-next-line vue/no-v-html -- санитизировано в normalizePostDetailResponse -->
       <div :class="$style.content" v-html="article.content" />
 
       <ul v-if="article.tags?.length" :class="$style.tags" aria-label="Теги">

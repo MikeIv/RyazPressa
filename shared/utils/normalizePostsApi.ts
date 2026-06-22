@@ -6,6 +6,7 @@ import type {
   PaginatedResponse,
 } from '#shared/types/api'
 import { htmlToPlainText } from '#shared/utils/htmlToPlainText'
+import { sanitizeHtml } from '#shared/utils/sanitizeHtml'
 
 interface BackendImageAsset {
   url: string
@@ -56,7 +57,7 @@ function resolveLead(raw: BackendPostItem): string {
   if (lead) return lead
 
   const content = raw.content?.trim()
-  if (content) return htmlToPlainText(content)
+  if (content) return htmlToPlainText(sanitizeHtml(content))
 
   return ''
 }
@@ -136,7 +137,7 @@ export function normalizePostDetailResponse(raw: unknown): Article {
 
   const article: Article = {
     ...normalizeNewsItem(item),
-    content: item.content ?? '',
+    content: sanitizeHtml(item.content ?? ''),
   }
 
   if (item.author?.trim()) article.author = item.author.trim()

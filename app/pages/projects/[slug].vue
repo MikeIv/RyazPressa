@@ -40,7 +40,7 @@ useHead({
         height="450"
       />
 
-      <!-- eslint-disable-next-line vue/no-v-html -- HTML из CMS/API -->
+      <!-- eslint-disable-next-line vue/no-v-html -- санитизировано в normalizePostDetailResponse -->
       <div :class="$style.content" v-html="article.content" />
 
       <NuxtLink to="/projects" :class="$style.back">← Все проекты</NuxtLink>
