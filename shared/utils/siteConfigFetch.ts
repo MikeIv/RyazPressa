@@ -25,12 +25,7 @@ export interface SiteConfigFetchOptions {
 }
 
 /** Общие опции `useFetch` для `/api/_site`. */
-export function buildSiteConfigFetchOptions(
-  apiBase: string | undefined,
-  devSiteSlug?: string,
-): SiteConfigFetchOptions {
-  const crossOrigin = Boolean(normalizeApiBaseUrl(apiBase))
-
+export function buildSiteConfigFetchOptions(devSiteSlug?: string): SiteConfigFetchOptions {
   return {
     key: SITE_CONFIG_KEY,
     watch: false,
@@ -38,7 +33,6 @@ export function buildSiteConfigFetchOptions(
     onRequest: ({ options }) => {
       applyClientApiRequestHeaders(options, {
         devSiteSlug,
-        crossOrigin,
       })
     },
   }
@@ -48,6 +42,6 @@ export function buildSiteConfigFetchOptions(
 export function getSiteConfigFetchParams(apiBase: string | undefined, devSiteSlug?: string) {
   return {
     url: resolveSiteConfigRequestUrl(apiBase),
-    options: buildSiteConfigFetchOptions(apiBase, devSiteSlug),
+    options: buildSiteConfigFetchOptions(devSiteSlug),
   }
 }

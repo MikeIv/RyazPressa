@@ -59,9 +59,6 @@ export default defineNuxtConfig({
 
       // Единый API для всех сайтов. Пусто — относительные /api/* (dev mock / прокси на контент-домене).
       apiBase: process.env.NUXT_PUBLIC_API_BASE ?? undefined,
-
-      /** @deprecated Используйте `NUXT_PUBLIC_API_BASE`. Оставлено для обратной совместимости CI. */
-      siteConfigApiBase: process.env.NUXT_PUBLIC_SITE_CONFIG_API_BASE ?? undefined,
     },
   },
 

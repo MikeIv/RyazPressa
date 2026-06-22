@@ -23,9 +23,7 @@ type SiteConfigNuxtApp = ReturnType<typeof useNuxtApp> & {
  */
 export function useSiteConfigFetchParams() {
   const publicConfig = useRuntimeConfig().public
-  const apiBase =
-    readApiBase('apiBase' in publicConfig ? publicConfig.apiBase : undefined) ??
-    readApiBase('siteConfigApiBase' in publicConfig ? publicConfig.siteConfigApiBase : undefined)
+  const apiBase = readApiBase('apiBase' in publicConfig ? publicConfig.apiBase : undefined)
   const siteSlug = 'siteSlug' in publicConfig ? publicConfig.siteSlug : undefined
 
   return getSiteConfigFetchParams(apiBase, typeof siteSlug === 'string' ? siteSlug : undefined)
@@ -59,8 +57,7 @@ export function initSiteConfig(): void {
 /**
  * Конфиг текущего сайта. Один `useFetch` на приложение (ключ `site-config`).
  *
- * При `NUXT_PUBLIC_API_BASE` запрос идёт на общий API-хост с `X-Site-Slug`
- * (и `X-Forwarded-Host` при cross-origin).
+ * При `NUXT_PUBLIC_API_BASE` запрос идёт на общий API-хост с `X-Site-Slug`.
  */
 export function useSiteConfig(): SiteConfigView {
   const nuxtApp = useNuxtApp() as SiteConfigNuxtApp

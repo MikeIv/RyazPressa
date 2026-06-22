@@ -9,7 +9,7 @@ import { shouldUseMockApi } from '#server/utils/shouldUseMockApi'
 
 /**
  * В dev с NUXT_USE_MOCK_API=false этот хендлер может проксировать на реальный бэкенд,
- * чтобы полностью проверить цепочку (в т.ч. резолв сайта по Host на стороне бэкенда).
+ * чтобы полностью проверить цепочку (резолв сайта по `X-Site-Slug` на бэкенде).
  * По умолчанию (и в production static) _site всегда отдаётся из локального реестра фронтенда
  * или приходит с бэкенда уже через прокси веб-сервера контент-домена.
  */
@@ -22,12 +22,7 @@ export default defineEventHandler(async (event): Promise<PublicSiteConfig> => {
       const originalHost = getSiteRequestHost(event) || getRequestHeader(event, 'host') || ''
 
       try {
-        const fetchOptions: { headers?: HeadersInit } = {
-          headers: {
-            Host: originalHost,
-            'X-Forwarded-Host': originalHost,
-          },
-        }
+        const fetchOptions: { headers?: HeadersInit } = {}
         const site = event.context.site
         applySiteSlugHeader(
           fetchOptions,
@@ -42,9 +37,7 @@ export default defineEventHandler(async (event): Promise<PublicSiteConfig> => {
         })
         const config = normalizePublicSiteConfig(upstream)
         if (import.meta.dev) {
-          console.log(
-            `[proxy _site] Host=${originalHost} → real backend returned site (slug=${config.slug})`,
-          )
+          console.log(`[proxy _site] X-Site-Slug → real backend (slug=${config.slug})`)
         }
         return config
       } catch (err) {

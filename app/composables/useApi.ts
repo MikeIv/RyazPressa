@@ -20,7 +20,6 @@ function useApiClientContext() {
   return {
     site,
     apiBase,
-    crossOrigin: Boolean(apiBase),
     devSiteSlug,
     rawApiBase: runtimeConfig.public.apiBase,
   }
@@ -31,7 +30,7 @@ function useApiClientContext() {
  * Сайт передаётся заголовком `X-Site-Slug` (apex-домен контент-хоста).
  */
 export function useApi() {
-  const { site, apiBase, crossOrigin, devSiteSlug } = useApiClientContext()
+  const { site, apiBase, devSiteSlug } = useApiClientContext()
 
   return $fetch.create({
     onRequest(ctx) {
@@ -43,7 +42,6 @@ export function useApi() {
       applyClientApiRequestHeaders(ctx.options, {
         site: site.value,
         devSiteSlug,
-        crossOrigin,
       })
     },
     onResponse(ctx) {
@@ -73,7 +71,7 @@ export function useApiFetch<T = unknown>(
   path: MaybeRefOrGetter<string>,
   options?: Omit<UseFetchOptions<unknown>, 'baseURL'>,
 ): AsyncData<T, FetchError | null> {
-  const { site, apiBase, crossOrigin, devSiteSlug, rawApiBase } = useApiClientContext()
+  const { site, apiBase, devSiteSlug, rawApiBase } = useApiClientContext()
   const contractPath = computed(() => String(toValue(path)))
   const request = computed(() => resolveClientApiUrl(contractPath.value, rawApiBase))
   const userTransform = options?.transform
@@ -91,7 +89,6 @@ export function useApiFetch<T = unknown>(
       applyClientApiRequestHeaders(requestOptions, {
         site: site.value,
         devSiteSlug,
-        crossOrigin,
       })
     },
   }) as AsyncData<T, FetchError | null>

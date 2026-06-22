@@ -4,9 +4,7 @@ import { getPrimarySiteDomain } from '#shared/utils/getPrimarySiteDomain'
 
 interface BrowserWindowLike {
   location: {
-    host: string
     hostname: string
-    protocol: string
   }
 }
 
@@ -74,24 +72,13 @@ export function resolveClientSiteApiIdentity(
   return resolveApiSiteHostForSiteConfig(browserWindow.location.hostname, devSiteSlug)
 }
 
-/** Заголовки для cross-origin вызовов на общий API-хост (`api.ryazpressa.ru`). */
+/** Заголовки клиентских вызовов на общий API-хост (`api.ryazpressa.ru`). */
 export function applyClientApiRequestHeaders(
   options: { headers?: HeadersInit },
   params: {
     site?: PublicSiteConfig | null
     devSiteSlug?: string
-    crossOrigin: boolean
   },
 ): void {
   applySiteSlugHeader(options, resolveClientSiteApiIdentity(params.site, params.devSiteSlug))
-
-  if (!params.crossOrigin) return
-
-  const browserWindow = (globalThis as typeof globalThis & { window?: BrowserWindowLike }).window
-  if (!browserWindow) return
-
-  const headers = new Headers(options.headers)
-  headers.set('X-Forwarded-Host', browserWindow.location.host)
-  headers.set('X-Forwarded-Proto', browserWindow.location.protocol.replace(':', ''))
-  options.headers = headers
 }
