@@ -1,0 +1,37 @@
+/** Разметка статей из CMS (WordPress: wp-block-image, wp-block-gallery). */
+@mixin article-body-content {
+  :global(p) {
+    margin-bottom: var(--fs-space-2);
+  }
+
+  :global(img) {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  :global(figure) {
+    margin-block: var(--fs-space-3);
+  }
+
+  :global(figure.wp-block-image),
+  :global(.wp-block-gallery .wp-block-image) {
+    max-width: 100%;
+    margin: 0;
+    border-radius: var(--site-radius-md);
+    overflow: hidden;
+  }
+
+  :global(.wp-block-gallery) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--fs-space-2);
+    margin-block: var(--fs-space-3);
+    align-items: flex-start;
+  }
+
+  :global(.wp-block-gallery .wp-block-image) {
+    flex: 1 1 min(100%, 16rem);
+    max-width: 100%;
+  }
+}

@@ -49,6 +49,8 @@ useHead({
 </template>
 
 <style module lang="scss">
+@use '~/assets/styles/tools/cms-content' as cms;
+
 .page {
   padding-block: var(--fs-space-4);
   max-width: 720px;
@@ -81,6 +83,8 @@ useHead({
 
 .image {
   width: 100%;
+  height: auto;
+  object-fit: cover;
   border-radius: var(--site-radius-md);
   margin-bottom: var(--fs-space-3);
 }
@@ -89,9 +93,7 @@ useHead({
   font-size: var(--fs-text-base);
   line-height: var(--fs-leading-relaxed);
 
-  :global(p) {
-    margin-bottom: var(--fs-space-2);
-  }
+  @include cms.article-body-content;
 }
 
 .back {

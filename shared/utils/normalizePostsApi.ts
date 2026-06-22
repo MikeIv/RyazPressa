@@ -25,7 +25,29 @@ interface BackendPostItem {
   publishedAt: string
   content?: string | null
   author?: string | null
-  tags?: string[] | null
+  tags?: Array<string | BackendTag> | null
+}
+
+interface BackendTag {
+  id?: string | number
+  slug?: string
+  name?: string | null
+}
+
+function normalizeArticleTags(tags: BackendPostItem['tags']): string[] | undefined {
+  if (!tags?.length) return undefined
+
+  const names = tags
+    .map((tag) => {
+      if (typeof tag === 'string') return tag.trim()
+      if (tag && typeof tag === 'object') {
+        return tag.name?.trim() ?? ''
+      }
+      return ''
+    })
+    .filter((name) => name.length > 0)
+
+  return names.length > 0 ? names : undefined
 }
 
 interface BackendPaginatedMeta {
@@ -141,7 +163,8 @@ export function normalizePostDetailResponse(raw: unknown): Article {
   }
 
   if (item.author?.trim()) article.author = item.author.trim()
-  if (item.tags?.length) article.tags = item.tags
+  const tags = normalizeArticleTags(item.tags)
+  if (tags) article.tags = tags
 
   return article
 }

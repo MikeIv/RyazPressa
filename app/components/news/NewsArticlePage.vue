@@ -40,7 +40,9 @@ useHead({
       <div :class="$style.content" v-html="article.content" />
 
       <ul v-if="article.tags?.length" :class="$style.tags" aria-label="Теги">
-        <li v-for="tag in article.tags" :key="tag" :class="$style.tag">{{ tag }}</li>
+        <li v-for="(tag, index) in article.tags" :key="`${tag}-${index}`" :class="$style.tag">
+          {{ tag }}
+        </li>
       </ul>
 
       <NuxtLink to="/" :class="$style.back">← Все новости</NuxtLink>
@@ -49,6 +51,8 @@ useHead({
 </template>
 
 <style module lang="scss">
+@use '~/assets/styles/tools/cms-content' as cms;
+
 .page {
   padding-block: var(--fs-space-4);
   max-width: 720px;
@@ -84,6 +88,8 @@ useHead({
 
 .image {
   width: 100%;
+  height: auto;
+  object-fit: cover;
   border-radius: var(--site-radius-md);
   margin-bottom: var(--fs-space-3);
 }
@@ -92,26 +98,37 @@ useHead({
   font-size: var(--fs-text-base);
   line-height: var(--fs-leading-relaxed);
 
-  :global(p) {
-    margin-bottom: var(--fs-space-2);
-  }
+  @include cms.article-body-content;
 }
 
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--fs-space-1);
+  gap: var(--fs-space-2);
   margin-top: var(--fs-space-4);
+  padding-top: var(--fs-space-3);
+  border-top: 1px solid var(--fs-color-border);
   list-style: none;
-  padding: 0;
+  padding-inline: 0;
 }
 
 .tag {
   font-size: var(--fs-text-xs);
-  padding: 4px 10px;
-  background: var(--fs-color-surface);
-  border-radius: var(--site-radius-sm);
-  color: var(--fs-color-text-muted);
+  font-weight: var(--fs-weight-medium);
+  line-height: 1.3;
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: var(--site-color-primary);
+  background: color-mix(in srgb, var(--site-color-primary) 10%, var(--site-color-background));
+  border: 1px solid color-mix(in srgb, var(--site-color-primary) 22%, var(--fs-color-border));
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover {
+    background: color-mix(in srgb, var(--site-color-primary) 16%, var(--site-color-background));
+    border-color: color-mix(in srgb, var(--site-color-primary) 36%, var(--fs-color-border));
+  }
 }
 
 .back {

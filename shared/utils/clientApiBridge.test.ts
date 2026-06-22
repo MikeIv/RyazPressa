@@ -97,6 +97,26 @@ describe('transformClientApiResponse', () => {
     expect(result.content).not.toContain('script')
   })
 
+  it('normalizes post tags to display names', () => {
+    const raw = {
+      data: {
+        id: 1,
+        slug: 'post-1',
+        title: 'Post',
+        publishedAt: '2026-06-22T10:00:00+03:00',
+        content: '<p>Body</p>',
+        tags: [
+          { id: '2667', slug: 'zvonnicza', name: 'Звонница' },
+          { id: '4388', slug: 'muzykanty', name: 'музыканты' },
+        ],
+      },
+    }
+
+    const result = transformClientApiResponse('/api/news/post-1', raw) as Article
+
+    expect(result.tags).toEqual(['Звонница', 'музыканты'])
+  })
+
   it('returns raw payload for unknown contract paths', () => {
     const raw = { ok: true }
     expect(transformClientApiResponse('/api/unknown', raw)).toEqual(raw)
