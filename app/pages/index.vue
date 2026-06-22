@@ -8,9 +8,11 @@ const { data, pending, error } = useApiFetch<PaginatedResponse<NewsItem>>('/api/
   key: 'news-home',
 })
 
+const HOME_FEED_LIST_COUNT = 3
+
 const allNews = computed(() => data.value?.data ?? [])
 const featured = computed(() => allNews.value[0] ?? null)
-const feedRest = computed(() => allNews.value.slice(1, 4))
+const feedRest = computed(() => allNews.value.slice(1, 1 + HOME_FEED_LIST_COUNT))
 const hasError = computed(() => Boolean(error.value))
 const isRyazpressa = computed(() => site.value?.slug === 'ryazpressa')
 const popularNews = computed(() => (isRyazpressa.value ? feedRest.value.slice(-2) : []))
@@ -27,25 +29,36 @@ useHead({
     <section
       :class="[$style.homeGrid, isRyazpressa && $style.homeGridWithAside]"
       aria-labelledby="news-feed-heading"
+      :aria-busy="pending"
     >
       <h2 id="news-feed-heading" class="visually-hidden">Лента новостей</h2>
+      <p class="visually-hidden" role="status">{{ pending ? 'Загрузка ленты новостей' : '' }}</p>
 
-      <p v-if="pending" :class="$style.status" role="status">Загрузка ленты…</p>
-      <p v-else-if="hasError" :class="$style.status" role="alert">Не удалось загрузить ленту.</p>
-      <p v-else-if="!allNews.length" :class="$style.status">Новостей в ленте пока нет.</p>
+      <template v-if="pending">
+        <div :class="$style.featuredBlock">
+          <NewsFeedNow />
+          <NewsFeedFeaturedSkeleton />
+        </div>
+        <NewsFeedListSkeleton :class="$style.list" :count="HOME_FEED_LIST_COUNT" />
+        <NewsAsideTodaySkeleton v-if="isRyazpressa" :class="$style.aside" />
+      </template>
 
-      <div v-if="featured" :class="$style.featuredBlock">
-        <NewsFeedNow />
-        <NewsFeedFeatured :item="featured" />
-      </div>
-      <NewsFeedList v-if="feedRest.length" :class="$style.list" :items="feedRest" />
-      <NewsAsideToday
-        v-if="isRyazpressa"
-        :class="$style.aside"
-        :items="popularNews"
-        :pending="pending"
-        :error="hasError"
-      />
+      <template v-else>
+        <p v-if="hasError" :class="$style.status" role="alert">Не удалось загрузить ленту.</p>
+        <p v-else-if="!allNews.length" :class="$style.status">Новостей в ленте пока нет.</p>
+
+        <div v-if="featured" :class="$style.featuredBlock">
+          <NewsFeedNow />
+          <NewsFeedFeatured :item="featured" />
+        </div>
+        <NewsFeedList v-if="feedRest.length" :class="$style.list" :items="feedRest" />
+        <NewsAsideToday
+          v-if="isRyazpressa"
+          :class="$style.aside"
+          :items="popularNews"
+          :error="hasError"
+        />
+      </template>
     </section>
   </div>
 </template>

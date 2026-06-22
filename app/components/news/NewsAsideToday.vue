@@ -7,7 +7,6 @@ withDefaults(
     items: NewsItem[]
     heading?: string
     emptyText?: string
-    pending?: boolean
     error?: boolean
   }>(),
   {
@@ -24,8 +23,7 @@ const { articlePath } = useNewsArticlePath()
     <div :class="$style.panel">
       <h2 id="news-aside-heading" :class="$style.heading">{{ heading }}</h2>
 
-      <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>
-      <p v-else-if="error" :class="$style.status" role="alert">Не удалось загрузить блок.</p>
+      <p v-if="error" :class="$style.status" role="alert">Не удалось загрузить блок.</p>
       <p v-else-if="!items.length" :class="$style.status">{{ emptyText }}</p>
 
       <ul v-else :class="$style.list" role="list">
