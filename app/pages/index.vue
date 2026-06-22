@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { NewsItem, PaginatedResponse } from '#shared/types/api'
-import { filterNewsTodayAndYesterday } from '#shared/utils/groupNewsByDay'
 
 const { site } = useSiteConfig()
 
@@ -12,7 +11,7 @@ const { data, pending, error } = useApiFetch<PaginatedResponse<NewsItem>>('/api/
 const allNews = computed(() => data.value?.data ?? [])
 const featured = computed(() => allNews.value[0] ?? null)
 const feedRest = computed(() => allNews.value.slice(1, 4))
-const asideNews = computed(() => filterNewsTodayAndYesterday(allNews.value))
+const popularNews = computed(() => feedRest.value.slice(-2))
 const hasError = computed(() => Boolean(error.value))
 
 useHead({
@@ -31,16 +30,14 @@ useHead({
       <p v-else-if="hasError" :class="$style.status" role="alert">Не удалось загрузить ленту.</p>
       <p v-else-if="!allNews.length" :class="$style.status">Новостей в ленте пока нет.</p>
 
-      <div :class="$style.feedColumn">
-        <div v-if="featured" :class="$style.featuredBlock">
-          <NewsFeedNow />
-          <NewsFeedFeatured :item="featured" />
-        </div>
-        <NewsFeedList v-if="feedRest.length" :class="$style.list" :items="feedRest" />
+      <div v-if="featured" :class="$style.featuredBlock">
+        <NewsFeedNow />
+        <NewsFeedFeatured :item="featured" />
       </div>
+      <NewsFeedList v-if="feedRest.length" :class="$style.list" :items="feedRest" />
       <NewsAsideToday
         :class="$style.aside"
-        :items="asideNews"
+        :items="popularNews"
         :pending="pending"
         :error="hasError"
       />
@@ -61,37 +58,27 @@ useHead({
   }
 }
 
-/* Мобильный порядок: featured → aside → list (display: contents на feedColumn) */
+/* Мобильный порядок: featured → list → aside */
 .homeGrid {
   display: grid;
   gap: var(--fs-space-3);
   min-width: 0;
   grid-template-areas:
     'featured'
-    'aside'
-    'list';
+    'list'
+    'aside';
 
   @include mx.from-desktop {
     grid-template-columns: minmax(0, 1fr) 300px;
-    grid-template-areas: 'feedColumn aside';
+    grid-template-areas:
+      'featured featured'
+      'list aside';
     gap: var(--fs-space-4);
     align-items: start;
 
     @media (min-width: #{bp.$desktopMedium}) {
       grid-template-columns: minmax(0, 1fr) 340px;
     }
-  }
-}
-
-.feedColumn {
-  display: contents;
-
-  @include mx.from-desktop {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fs-space-4);
-    grid-area: feedColumn;
-    min-width: 0;
   }
 }
 

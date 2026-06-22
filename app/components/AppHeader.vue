@@ -384,14 +384,14 @@ watch(
 }
 
 .navLinkActive {
-  color: var(--site-color-primary);
+  color: var(--site-color-accent);
   font-weight: var(--fs-weight-bold);
   text-decoration: underline;
   text-underline-offset: 4px;
   text-decoration-thickness: 2px;
 
   &:hover {
-    color: var(--site-color-primary);
+    color: var(--site-color-accent);
   }
 }
 </style>
