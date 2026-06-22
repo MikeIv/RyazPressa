@@ -33,6 +33,7 @@ lint:
   script:
     - pnpm lint:all
     - pnpm exec nuxi typecheck
+    - pnpm test
 
 generate:
   <<: *default_setup

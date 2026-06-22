@@ -16,6 +16,8 @@
     "stylelint": "stylelint \"**/*.{vue,css}\" --allow-empty-input",
     "stylelint:fix": "stylelint \"**/*.{vue,css}\" --fix --allow-empty-input",
     "lint:all": "eslint . && prettier --check . && stylelint \"**/*.{vue,css}\" --allow-empty-input && pnpm validate:sites",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "smoke:sites": "node scripts/smoke-sites.mjs",
     "validate:sites": "node scripts/validate-sites.mjs",
     "generate:logos": "node scripts/generate-site-logos.mjs",
@@ -38,6 +40,7 @@
     "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
+    "h3": "1.15.11",
     "husky": "^9.1.7",
     "jiti": "2.7.0",
     "lint-staged": "^17.0.4",
@@ -50,6 +53,7 @@
     "stylelint-config-recommended-vue": "^1.6.1",
     "to-ico": "^1.1.5",
     "typescript": "~5.8.3",
+    "vitest": "^4.1.9",
     "vue-tsc": "^3.2.8"
   }
 }
