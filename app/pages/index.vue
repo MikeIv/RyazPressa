@@ -11,8 +11,9 @@ const { data, pending, error } = useApiFetch<PaginatedResponse<NewsItem>>('/api/
 const allNews = computed(() => data.value?.data ?? [])
 const featured = computed(() => allNews.value[0] ?? null)
 const feedRest = computed(() => allNews.value.slice(1, 4))
-const popularNews = computed(() => feedRest.value.slice(-2))
 const hasError = computed(() => Boolean(error.value))
+const isRyazpressa = computed(() => site.value?.slug === 'ryazpressa')
+const popularNews = computed(() => (isRyazpressa.value ? feedRest.value.slice(-2) : []))
 
 useHead({
   title: () => site.value?.name ?? 'Главная',
@@ -23,7 +24,10 @@ useHead({
   <div :class="$style.page">
     <h1 class="visually-hidden">{{ site?.name ?? 'Главная' }}</h1>
 
-    <section :class="$style.homeGrid" aria-labelledby="news-feed-heading">
+    <section
+      :class="[$style.homeGrid, isRyazpressa && $style.homeGridWithAside]"
+      aria-labelledby="news-feed-heading"
+    >
       <h2 id="news-feed-heading" class="visually-hidden">Лента новостей</h2>
 
       <p v-if="pending" :class="$style.status" role="status">Загрузка ленты…</p>
@@ -36,6 +40,7 @@ useHead({
       </div>
       <NewsFeedList v-if="feedRest.length" :class="$style.list" :items="feedRest" />
       <NewsAsideToday
+        v-if="isRyazpressa"
         :class="$style.aside"
         :items="popularNews"
         :pending="pending"
@@ -58,11 +63,22 @@ useHead({
   }
 }
 
-/* Мобильный порядок: featured → list → aside */
+/* По умолчанию: featured + list на всю ширину; ryazpressa — колонка aside справа */
 .homeGrid {
   display: grid;
   gap: var(--fs-space-3);
   min-width: 0;
+  grid-template-areas:
+    'featured'
+    'list';
+
+  @include mx.from-desktop {
+    gap: var(--fs-space-4);
+    align-items: start;
+  }
+}
+
+.homeGridWithAside {
   grid-template-areas:
     'featured'
     'list'
@@ -73,8 +89,6 @@ useHead({
     grid-template-areas:
       'featured featured'
       'list aside';
-    gap: var(--fs-space-4);
-    align-items: start;
 
     @media (min-width: #{bp.$desktopMedium}) {
       grid-template-columns: minmax(0, 1fr) 340px;
