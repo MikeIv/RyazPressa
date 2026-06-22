@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useFontScale } from '~/composables/useFontScale'
+
 const { fontSizePx, announcement, increase, decrease, canIncrease, canDecrease } = useFontScale()
 </script>
 
