@@ -2,8 +2,8 @@ import type { H3Event } from 'h3'
 import { getMockProjectDetail } from '#shared/mock/projects'
 import { getNewsForSite, getArticlesForSite } from '#shared/mock/siteMockAccess'
 import { filterNewsTodayAndYesterday } from '#shared/utils/groupNewsByDay'
+import { normalizePostDetailResponse } from '#shared/utils/normalizePostsApi'
 import { paginate } from '#shared/utils/paginate'
-import { sanitizeHtml } from '#shared/utils/sanitizeHtml'
 
 export function mockNewsIndex(event: H3Event) {
   const siteSlug = event.context.site.slug
@@ -33,12 +33,12 @@ export function mockNewsBySlug(event: H3Event) {
   const articles = getArticlesForSite(siteSlug)
   const article = articles.find((a) => a.slug === slug)
   if (article) {
-    return { ...article, content: sanitizeHtml(article.content) }
+    return normalizePostDetailResponse(article)
   }
 
   const project = getMockProjectDetail(slug)
   if (project) {
-    return { id: project.slug, ...project, content: sanitizeHtml(project.content) }
+    return normalizePostDetailResponse({ id: project.slug, ...project })
   }
 
   throw createError({ statusCode: 404, statusMessage: 'Article not found' })
