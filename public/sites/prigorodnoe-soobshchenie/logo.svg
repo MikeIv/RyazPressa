@@ -1,14 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="160" height="40" viewBox="0 0 160 40" role="img" aria-label="Пригородное сообщение">
-  <rect width="160" height="40" fill="#222222" rx="4" />
-  <text
-    x="80"
-    y="26"
-    text-anchor="middle"
-    fill="#ffffff"
-    font-family="system-ui, sans-serif"
-    font-size="13"
-    font-weight="700"
-  >
-    Пригородное сообщение
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="220"
+     viewBox="0 0 850 220">
+  <rect width="100%" height="100%" fill="none"/>
+  <text x="40" y="150"
+        font-family="Impact, 'Arial Narrow', serif"
+        font-size="92"
+        font-weight="700"
+        letter-spacing="3"
+        fill="#24479a">
+    РЯЗАНСКИЙ КУРЬЕР
   </text>
 </svg>
