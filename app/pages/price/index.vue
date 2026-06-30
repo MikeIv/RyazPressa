@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSectionPageBreadcrumbs } from '~/composables/useBreadcrumbs'
 import type { ListResponse, Paper, Tariff } from '#shared/types/api'
 import { buildPaperOrderRequest } from '#shared/utils/normalizeSubscriptionApi'
 import { nextSubscriptionStartIsoDate } from '#shared/utils/subscriptionStartDate'

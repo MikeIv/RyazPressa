@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSectionPageBreadcrumbs } from '~/composables/useBreadcrumbs'
 import type { NewsItem, PaginatedResponse } from '#shared/types/api'
 import { RYADOM_S_NAMI_SEGMENT } from '#shared/utils/newsArticlePath'
 

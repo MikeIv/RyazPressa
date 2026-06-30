@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSectionPageBreadcrumbs } from '~/composables/useBreadcrumbs'
 import type { ContactInfo } from '#shared/types/api'
 import { contactInfoHasContent, contactTelHref } from '#shared/utils/normalizeContactsApi'
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSectionPageBreadcrumbs } from '~/composables/useBreadcrumbs'
 import { formatDate } from '#shared/utils/formatDate'
 import type { GalleryItem, PaginatedResponse } from '#shared/types/api'
 

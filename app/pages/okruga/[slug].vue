@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSectionDetailBreadcrumbs } from '~/composables/useBreadcrumbs'
 import type { District, DistrictDetail, ListResponse } from '#shared/types/api'
 
 definePageMeta({

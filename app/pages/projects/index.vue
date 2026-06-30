@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSectionPageBreadcrumbs } from '~/composables/useBreadcrumbs'
 import { formatDate } from '#shared/utils/formatDate'
 import type { ListResponse, Project } from '#shared/types/api'
 

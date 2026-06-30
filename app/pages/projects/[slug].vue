@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSectionDetailBreadcrumbs } from '~/composables/useBreadcrumbs'
 import { formatDate } from '#shared/utils/formatDate'
 import type { Article } from '#shared/types/api'
 

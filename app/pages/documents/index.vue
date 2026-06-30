@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useSectionPageBreadcrumbs } from '~/composables/useBreadcrumbs'
 import { formatDate } from '#shared/utils/formatDate'
 import { formatFileSize } from '#shared/utils/formatFileSize'
 import type { DocumentItem, PaginatedResponse } from '#shared/types/api'
