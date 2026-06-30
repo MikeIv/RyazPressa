@@ -41,6 +41,11 @@ export const EXTENDED_SITE_NAV_ORDER: (keyof SiteSections)[] = [
   'price',
 ]
 
+/** Nav-элемент раздела (для breadcrumbs и ссылок). */
+export function getSectionNavItem(section: keyof SiteSections): SiteNavItem | undefined {
+  return SECTION_NAV[section]
+}
+
 /** Навигация из включённых разделов (главная/новости всегда первая). */
 export interface NavFromSectionsOptions {
   homeLabel?: string

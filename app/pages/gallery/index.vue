@@ -14,10 +14,13 @@ const { data, pending, error } = useApiFetch<PaginatedResponse<GalleryItem>>('/a
 const items = computed(() => data.value?.data ?? [])
 
 useHead({ title: 'Фотогалерея' })
+
+const breadcrumbs = useSectionPageBreadcrumbs('gallery')
 </script>
 
 <template>
   <div :class="$style.page">
+    <UiBreadcrumbs :items="breadcrumbs" />
     <h1 :class="$style.title">Фотогалерея</h1>
 
     <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>

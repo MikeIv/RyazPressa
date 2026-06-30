@@ -15,10 +15,13 @@ const { data: article, pending, error } = useApiFetch<Article>(() => `/api/news/
 useHead({
   title: () => article.value?.title ?? 'Проект',
 })
+
+const breadcrumbs = useSectionDetailBreadcrumbs('projects', () => article.value?.title ?? 'Проект')
 </script>
 
 <template>
   <article :class="$style.page">
+    <UiBreadcrumbs :items="breadcrumbs" />
     <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>
     <p v-else-if="error" :class="$style.status" role="alert">Проект не найден.</p>
 

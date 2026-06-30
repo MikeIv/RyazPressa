@@ -7,6 +7,11 @@ const slug = computed(() => String(route.params.slug))
 
 const { data: article, pending, error } = useApiFetch<Article>(() => `/api/news/${slug.value}`)
 
+const breadcrumbs = useArticleBreadcrumbs(
+  () => article.value?.title ?? 'Статья',
+  () => article.value?.category,
+)
+
 useHead({
   title: () => article.value?.title ?? 'Статья',
 })
@@ -14,6 +19,7 @@ useHead({
 
 <template>
   <article :class="$style.page">
+    <UiBreadcrumbs :items="breadcrumbs" />
     <p v-if="pending" :class="$style.status" role="status">Загрузка статьи…</p>
     <p v-else-if="error" :class="$style.status" role="alert">Статья не найдена.</p>
 

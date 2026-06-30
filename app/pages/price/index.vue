@@ -181,10 +181,13 @@ async function onSubmit(event: Event): Promise<void> {
 }
 
 useHead({ title: 'Прайс лист' })
+
+const breadcrumbs = useSectionPageBreadcrumbs('price', 'Прайс лист')
 </script>
 
 <template>
   <div :class="$style.page">
+    <UiBreadcrumbs :items="breadcrumbs" />
     <h1 :class="$style.pageTitle">Прайс лист</h1>
 
     <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>

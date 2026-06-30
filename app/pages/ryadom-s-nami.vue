@@ -15,10 +15,13 @@ const { data, pending, error } = useApiFetch<PaginatedResponse<NewsItem>>('/api/
 const articles = computed(() => data.value?.data ?? [])
 
 useHead({ title: 'Рядом с нами' })
+
+const breadcrumbs = useSectionPageBreadcrumbs('ryadomSNami')
 </script>
 
 <template>
   <div :class="$style.page">
+    <UiBreadcrumbs :items="breadcrumbs" />
     <h1 :class="$style.title">Рядом с нами</h1>
 
     <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>

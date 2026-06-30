@@ -17,10 +17,13 @@ const orgTitle = computed(
 )
 
 useHead({ title: 'Контакты' })
+
+const breadcrumbs = useSectionPageBreadcrumbs('contacts')
 </script>
 
 <template>
   <div :class="$style.page">
+    <UiBreadcrumbs :items="breadcrumbs" />
     <h1 :class="$style.title">Контакты</h1>
 
     <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>

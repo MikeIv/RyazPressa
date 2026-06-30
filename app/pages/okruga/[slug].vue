@@ -42,10 +42,13 @@ const isUnknownDistrict = computed(
 useHead({
   title: () => district.value?.name ?? 'Округ',
 })
+
+const breadcrumbs = useSectionDetailBreadcrumbs('okruga', () => district.value?.name ?? 'Округ')
 </script>
 
 <template>
   <div :class="$style.page">
+    <UiBreadcrumbs :items="breadcrumbs" />
     <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>
     <p v-else-if="error || isUnknownDistrict" :class="$style.status" role="alert">Округ не найден.</p>
 

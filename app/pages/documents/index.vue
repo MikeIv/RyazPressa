@@ -18,10 +18,13 @@ const documents = computed(() =>
 )
 
 useHead({ title: 'Документы' })
+
+const breadcrumbs = useSectionPageBreadcrumbs('documents')
 </script>
 
 <template>
   <div :class="$style.page">
+    <UiBreadcrumbs :items="breadcrumbs" />
     <h1 :class="$style.title">Документы</h1>
 
     <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>

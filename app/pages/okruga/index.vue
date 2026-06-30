@@ -12,10 +12,13 @@ const { data, pending, error } = useApiFetch<ListResponse<District>>('/api/distr
 const districts = computed(() => data.value?.data ?? [])
 
 useHead({ title: 'Округа' })
+
+const breadcrumbs = useSectionPageBreadcrumbs('okruga')
 </script>
 
 <template>
   <div :class="$style.page">
+    <UiBreadcrumbs :items="breadcrumbs" />
     <h1 :class="$style.title">Округа</h1>
 
     <p v-if="pending" :class="$style.status" role="status">Загрузка…</p>
