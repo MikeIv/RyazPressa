@@ -1,21 +1,83 @@
 <script setup lang="ts">
-import type { NewsItem, PaginatedResponse } from '#shared/types/api'
+import type { NewsItem, PaginatedMeta, PaginatedResponse } from '#shared/types/api'
 
 const { site } = useSiteConfig()
+const api = useApi()
+
+/** Главная новость + блок «Популярные» (ryazpressa) не входят в основную сетку. */
+const HOME_ASIDE_COUNT = 2
+const HOME_LIST_BATCH = 8
+const HOME_FEED_PAGE_SIZE = 20
 
 const { data, pending, error } = useApiFetch<PaginatedResponse<NewsItem>>('/api/news', {
-  query: { perPage: 20 },
+  query: { perPage: HOME_FEED_PAGE_SIZE },
   key: 'news-home',
 })
 
-const HOME_FEED_LIST_COUNT = 3
-
 const allNews = computed(() => data.value?.data ?? [])
-const featured = computed(() => allNews.value[0] ?? null)
-const feedRest = computed(() => allNews.value.slice(1, 1 + HOME_FEED_LIST_COUNT))
 const hasError = computed(() => Boolean(error.value))
 const isRyazpressa = computed(() => site.value?.slug === 'ryazpressa')
-const popularNews = computed(() => (isRyazpressa.value ? feedRest.value.slice(-2) : []))
+const featured = computed(() => allNews.value[0] ?? null)
+const popularNews = computed(() =>
+  isRyazpressa.value ? allNews.value.slice(1, 1 + HOME_ASIDE_COUNT) : [],
+)
+
+const listNews = ref<NewsItem[]>([])
+const listMeta = ref<PaginatedMeta | null>(null)
+const visibleCount = ref(HOME_LIST_BATCH)
+const nextPage = ref(2)
+const loadingMore = ref(false)
+
+const listStartIndex = computed(() => 1 + (isRyazpressa.value ? HOME_ASIDE_COUNT : 0))
+
+watch(
+  [data, listStartIndex],
+  () => {
+    const response = data.value
+    if (!response) {
+      listNews.value = []
+      listMeta.value = null
+      visibleCount.value = HOME_LIST_BATCH
+      nextPage.value = 2
+      return
+    }
+
+    listNews.value = response.data.slice(listStartIndex.value)
+    listMeta.value = response.meta
+    visibleCount.value = HOME_LIST_BATCH
+    nextPage.value = 2
+  },
+  { immediate: true },
+)
+
+const displayedList = computed(() => listNews.value.slice(0, visibleCount.value))
+
+const hasMore = computed(() => {
+  if (visibleCount.value < listNews.value.length) return true
+  if (!listMeta.value) return false
+  return nextPage.value <= listMeta.value.totalPages
+})
+
+async function loadMore(): Promise<void> {
+  visibleCount.value += HOME_LIST_BATCH
+
+  if (visibleCount.value <= listNews.value.length) return
+  if (!listMeta.value || nextPage.value > listMeta.value.totalPages) return
+
+  loadingMore.value = true
+  try {
+    const response = await api<PaginatedResponse<NewsItem>>('/api/news', {
+      query: { page: nextPage.value, perPage: HOME_FEED_PAGE_SIZE },
+    })
+    listNews.value = [...listNews.value, ...response.data]
+    listMeta.value = response.meta
+    nextPage.value += 1
+  } catch {
+    visibleCount.value -= HOME_LIST_BATCH
+  } finally {
+    loadingMore.value = false
+  }
+}
 
 useHead({
   title: () => site.value?.name ?? 'Главная',
@@ -39,7 +101,9 @@ useHead({
           <NewsFeedNow />
           <NewsFeedFeaturedSkeleton />
         </div>
-        <NewsFeedListSkeleton :class="$style.list" :count="HOME_FEED_LIST_COUNT" />
+        <div :class="$style.listBlock">
+          <NewsFeedListSkeleton :count="HOME_LIST_BATCH" />
+        </div>
         <NewsAsideTodaySkeleton v-if="isRyazpressa" :class="$style.aside" />
       </template>
 
@@ -51,7 +115,18 @@ useHead({
           <NewsFeedNow />
           <NewsFeedFeatured :item="featured" />
         </div>
-        <NewsFeedList v-if="feedRest.length" :class="$style.list" :items="feedRest" />
+        <div v-if="displayedList.length" :class="$style.listBlock">
+          <NewsFeedList :items="displayedList" />
+          <button
+            v-if="hasMore"
+            type="button"
+            :class="$style.loadMore"
+            :disabled="loadingMore"
+            @click="loadMore"
+          >
+            {{ loadingMore ? 'Загрузка…' : 'Показать еще' }}
+          </button>
+        </div>
         <NewsAsideToday
           v-if="isRyazpressa"
           :class="$style.aside"
@@ -117,9 +192,54 @@ useHead({
 }
 
 .featuredBlock,
-.list,
+.listBlock,
 .aside {
   min-width: 0;
+}
+
+.listBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-space-3);
+  grid-area: list;
+}
+
+.loadMore {
+  align-self: center;
+  min-width: min(100%, 280px);
+  padding: 12px var(--fs-space-4);
+  font-size: var(--fs-text-base);
+  font-weight: var(--fs-weight-semibold);
+  line-height: 1.2;
+  color: var(--site-color-primary);
+  background: var(--site-color-background);
+  border: 1px solid color-mix(in srgb, var(--site-color-primary) 35%, var(--fs-color-border));
+  border-radius: var(--site-radius-md);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--site-color-primary) 8%, var(--site-color-background));
+    border-color: color-mix(in srgb, var(--site-color-primary) 55%, var(--fs-color-border));
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--site-color-primary);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: wait;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loadMore {
+    transition: none;
+  }
 }
 
 .featuredBlock {
@@ -131,9 +251,5 @@ useHead({
 
 .aside {
   grid-area: aside;
-}
-
-.list {
-  grid-area: list;
 }
 </style>
