@@ -1,5 +1,6 @@
 import type { PublicSiteConfig, SiteNavItem, SiteSections, SiteTheme } from '#shared/types/site'
 import type { NewsArticlePathPrefix } from '#shared/utils/newsArticlePath'
+import { SITE_BRAND_COLORS } from '#shared/sites/siteBrandColors'
 import { enrichSiteTheme, type SiteThemeInput } from '#shared/utils/siteThemeAssets'
 
 interface BackendSiteNavItem {
@@ -74,6 +75,13 @@ function readTheme(value: unknown): SiteThemeInput {
   return theme
 }
 
+/** Цвета базовых изданий — из реестра фронта, не с бэкенда (как logoSrc). */
+function applyFrontendBrandColors(slug: string, theme: SiteThemeInput): SiteThemeInput {
+  const brand = SITE_BRAND_COLORS[slug]
+  if (!brand) return theme
+  return { ...theme, colorPrimary: brand.colorPrimary, colorAccent: brand.colorAccent }
+}
+
 function readSections(value: unknown): SiteSections {
   if (!isRecord(value)) {
     throw new Error('Invalid site config response: sections is required')
@@ -109,7 +117,7 @@ export function normalizePublicSiteConfig(body: unknown): PublicSiteConfig {
     name,
     apiBase: typeof raw.apiBase === 'string' ? raw.apiBase : undefined,
     apiSiteHost,
-    theme: enrichSiteTheme(slug, name, readTheme(raw.theme)),
+    theme: enrichSiteTheme(slug, name, applyFrontendBrandColors(slug, readTheme(raw.theme))),
     sections: readSections(raw.sections),
     nav,
     articlePathPrefix: (raw.articlePathPrefix ?? '') as NewsArticlePathPrefix,

@@ -10,9 +10,6 @@ const SITE_LOGO_SIZE: Readonly<Record<string, Pick<SiteTheme, 'logoWidth' | 'log
   ryazpressa: { logoWidth: 300, logoHeight: 28 },
 }
 
-/** Slugs с favicon/apple-touch-icon в `public/sites/{slug}/`. */
-const SITES_WITH_FAVICON: ReadonlySet<string> = new Set(['ryazpressa'])
-
 /** Цвета и радиусы темы с бэкенда (без путей к статике фронта). */
 export type SiteThemeInput = Pick<
   SiteTheme,
@@ -30,11 +27,8 @@ export function enrichSiteTheme(slug: string, name: string, input: SiteThemeInpu
     ...(SITE_LOGO_SIZE[slug] ?? {}),
     logoSrc: siteAssetPath(slug, 'logo.svg'),
     logoAlt: name,
-  }
-
-  if (SITES_WITH_FAVICON.has(slug)) {
-    theme.faviconSrc = siteAssetPath(slug, 'favicon.ico')
-    theme.appleTouchIconSrc = siteAssetPath(slug, 'apple-touch-icon.png')
+    faviconSrc: siteAssetPath(slug, 'favicon.ico'),
+    appleTouchIconSrc: siteAssetPath(slug, 'apple-touch-icon.png'),
   }
 
   return theme

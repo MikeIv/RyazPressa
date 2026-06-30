@@ -28,7 +28,7 @@ export const SITE_BRAND_COLORS: Readonly<Record<string, SiteBrandColors>> = {
   pulseoflife: { colorPrimary: '#a00000', colorAccent: '#7a002c' },
   bezvariantov62: { colorPrimary: '#ad005c', colorAccent: '#880e4f' },
   iskra: { colorPrimary: '#004777', colorAccent: '#007ed3' },
-  nashevremya62: { colorPrimary: '#222222', colorAccent: '#4db2ec' },
+  nashevremya62: { colorPrimary: '#4527a0', colorAccent: '#ff6d00' },
   storonka62: { colorPrimary: '#5e0019', colorAccent: '#8b0025' },
 }
 

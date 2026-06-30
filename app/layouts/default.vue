@@ -1,9 +1,14 @@
 <script setup lang="ts">
+import { useSiteBoot } from '~/composables/useSiteBoot'
+
 const { isOpen: isFooterOpen, close: closeFooter } = useFooterPanel()
+const { showBootScreen } = useSiteBoot()
 </script>
 
 <template>
-  <div :class="$style.root">
+  <SiteBootScreen v-if="showBootScreen" />
+
+  <div v-else :class="$style.root">
     <a href="#main-content" class="skip-link">Перейти к основному содержимому</a>
     <AppHeader />
     <main id="main-content" :class="$style.main" tabindex="-1">

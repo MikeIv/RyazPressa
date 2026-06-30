@@ -1,27 +1,33 @@
-import type { SiteTheme } from '#shared/types/site'
-import { buildHeaderGradient } from '#shared/utils/buildHeaderGradient'
+import { getSiteBySlug } from '#shared/sites'
+import { resolveClientSiteSlug } from '#shared/utils/resolveClientSiteSlug'
+import { applySiteThemeCss } from '~/utils/applySiteThemeCss'
 
-function applySiteTheme(theme: SiteTheme): void {
-  const root = document.documentElement
-  root.style.setProperty('--site-color-primary', theme.colorPrimary)
-  root.style.setProperty('--site-color-accent', theme.colorAccent)
-  root.style.setProperty('--site-color-text', theme.colorText)
-  root.style.setProperty('--site-color-background', theme.colorBackground)
-  root.style.setProperty('--site-radius-sm', theme.radiusSm)
-  root.style.setProperty('--site-radius-md', theme.radiusMd)
-  root.style.setProperty(
-    '--site-header-gradient',
-    buildHeaderGradient(theme.colorPrimary, theme.colorAccent, theme.headerGradientStart),
-  )
+function readDevSiteSlug(): string | undefined {
+  const publicConfig = useRuntimeConfig().public
+  return 'siteSlug' in publicConfig && typeof publicConfig.siteSlug === 'string'
+    ? publicConfig.siteSlug
+    : undefined
 }
 
+function applyEarlySiteTheme(): void {
+  const devSiteSlug = readDevSiteSlug()
+  const slug = resolveClientSiteSlug(window.location.hostname, devSiteSlug)
+  if (!slug || slug === 'ryazpressa') return
+
+  const registrySite = getSiteBySlug(slug)
+  if (registrySite) applySiteThemeCss(registrySite.theme)
+}
+
+/** CSS-переменные темы по конфигу сайта; для не-ryazpressa — ранняя подстановка из реестра. */
 export default defineNuxtPlugin(() => {
+  applyEarlySiteTheme()
+
   const { site } = useSiteConfig()
 
   watch(
     () => site.value?.theme,
     (theme) => {
-      if (theme) applySiteTheme(theme)
+      if (theme) applySiteThemeCss(theme)
     },
     { immediate: true },
   )
