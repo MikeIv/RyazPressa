@@ -6,6 +6,7 @@ function siteAssetPath(slug: string, filename: string): string {
 
 /** Натуральные размеры логотипа (CLS) — только на фронте, не с бэкенда. */
 const SITE_LOGO_SIZE: Readonly<Record<string, Pick<SiteTheme, 'logoWidth' | 'logoHeight'>>> = {
+  'chestnye-vesti': { logoWidth: 400, logoHeight: 197 },
   nesecretno: { logoWidth: 360, logoHeight: 80 },
   ryazpressa: { logoWidth: 300, logoHeight: 28 },
 }
