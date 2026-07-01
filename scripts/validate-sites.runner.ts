@@ -63,6 +63,20 @@ for (const entry of siteManifestEntries) {
     errors.push(`[${entry.slug}] missing logo: public/sites/${entry.slug}/logo.svg`)
   }
 
+  const faviconFiles = [
+    'favicon.ico',
+    'favicon-16x16.png',
+    'favicon-32x32.png',
+    'apple-touch-icon.png',
+  ] as const
+
+  for (const filename of faviconFiles) {
+    const faviconPath = path.join(root, 'public/sites', entry.slug, filename)
+    if (!fs.existsSync(faviconPath)) {
+      errors.push(`[${entry.slug}] missing favicon asset: public/sites/${entry.slug}/${filename}`)
+    }
+  }
+
   for (const domain of expandDomains(entry.domain)) {
     const owner = sites.find((site) => site.domains.map((d) => d.toLowerCase()).includes(domain))
     if (owner && owner.slug !== entry.slug) {
@@ -76,6 +90,19 @@ if (!fs.existsSync(ryazpressaLogo)) {
   errors.push('Missing logo: public/sites/ryazpressa/logo.svg')
 }
 
+const ryazpressaFavicons = [
+  'favicon.ico',
+  'favicon-16x16.png',
+  'favicon-32x32.png',
+  'apple-touch-icon.png',
+] as const
+for (const filename of ryazpressaFavicons) {
+  const faviconPath = path.join(root, 'public/sites/ryazpressa', filename)
+  if (!fs.existsSync(faviconPath)) {
+    errors.push(`Missing favicon asset: public/sites/ryazpressa/${filename}`)
+  }
+}
+
 if (errors.length > 0) {
   console.error('validate-sites failed:\n')
   for (const message of errors) console.error(`  ✗ ${message}`)
@@ -84,4 +111,4 @@ if (errors.length > 0) {
 
 console.log(`✓ ${sites.length} sites in registry`)
 console.log(`✓ ${siteManifestEntries.length} base sites in manifest`)
-console.log(`✓ nav/sections, domains, logos, brand colors OK`)
+console.log(`✓ nav/sections, domains, logos, favicons, brand colors OK`)

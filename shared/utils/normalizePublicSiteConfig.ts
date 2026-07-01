@@ -1,5 +1,6 @@
 import type { PublicSiteConfig, SiteNavItem, SiteSections, SiteTheme } from '#shared/types/site'
 import type { NewsArticlePathPrefix } from '#shared/utils/newsArticlePath'
+import { getSiteByDomain, getSiteBySlug } from '#shared/sites'
 import { SITE_BRAND_COLORS } from '#shared/sites/siteBrandColors'
 import { enrichSiteTheme, type SiteThemeInput } from '#shared/utils/siteThemeAssets'
 
@@ -82,6 +83,25 @@ function applyFrontendBrandColors(slug: string, theme: SiteThemeInput): SiteThem
   return { ...theme, colorPrimary: brand.colorPrimary, colorAccent: brand.colorAccent }
 }
 
+/**
+ * Канонический slug из реестра фронта.
+ * Бэкенд для IDN иногда отдаёт punycode вместо slug (`xn----…` вместо `chestnye-vesti`).
+ */
+function resolveCanonicalSiteSlug(rawSlug: string, apiSiteHost: string): string {
+  const slug = rawSlug.trim()
+  const host = apiSiteHost.trim().toLowerCase()
+
+  if (getSiteBySlug(slug)) return slug
+
+  const byHost = getSiteByDomain(host)
+  if (byHost) return byHost.slug
+
+  const bySlugAsHost = getSiteByDomain(slug)
+  if (bySlugAsHost) return bySlugAsHost.slug
+
+  return slug
+}
+
 function readSections(value: unknown): SiteSections {
   if (!isRecord(value)) {
     throw new Error('Invalid site config response: sections is required')
@@ -97,17 +117,18 @@ function readSections(value: unknown): SiteSections {
 export function normalizePublicSiteConfig(body: unknown): PublicSiteConfig {
   const raw = unwrapSiteConfigBody(body)
 
-  const slug = raw.slug
-  if (typeof slug !== 'string' || !slug.trim()) {
+  const rawSlug = raw.slug
+  if (typeof rawSlug !== 'string' || !rawSlug.trim()) {
     throw new Error('Invalid site config response: slug is required')
   }
-
-  const name = typeof raw.name === 'string' ? raw.name : slug
 
   const apiSiteHost =
     (typeof raw.apiSiteHost === 'string' && raw.apiSiteHost.trim()) ||
     (typeof raw.domain === 'string' && raw.domain.trim()) ||
-    slug
+    rawSlug
+
+  const slug = resolveCanonicalSiteSlug(rawSlug, apiSiteHost)
+  const name = typeof raw.name === 'string' ? raw.name : slug
 
   const navRaw = Array.isArray(raw.nav) ? raw.nav : []
   const nav = navRaw.map((item) => normalizeNavItem(item as BackendSiteNavItem))
